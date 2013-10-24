@@ -1,4 +1,4 @@
-softwareprojekt
-===============
+Graph Reconstruction
+====================
 
-Metric graph reconstruction from noisy data
+Implementation of the algorithm of Mridul Aanjaneya, Frédéric Chazal, Daniel Chen, Marc Glisse, Leonidas Guibas, Dmitriy Morozov for reconstructing metric graphs from noisy data.
