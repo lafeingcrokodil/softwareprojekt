@@ -1,5 +1,5 @@
 package main;
 
-public interface MetricGraph extends MetricSpace, Graph {
+public interface MetricGraph<V> extends MetricSpace<V>, Graph {
 
 }
