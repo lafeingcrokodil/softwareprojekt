@@ -1,5 +1,6 @@
 package preprocessing;
 
+import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,12 +28,12 @@ public class GPSMetricSpace extends HashSet<Point> implements MetricSpace<Point>
 	 * @param filename the name of the file containing the data
 	 */
 	public GPSMetricSpace(String filename) {
-		// TODO Implement GPSMetricSpace constructor
+		// TODO implement constructor
 	}
 
 	@Override
 	public double distance(Point a, Point b) {
-		// TODO Implement GPSMetricSpace's distance() method
+		// TODO implement distance() method
 		return 0;
 	}
 
@@ -44,7 +45,7 @@ public class GPSMetricSpace extends HashSet<Point> implements MetricSpace<Point>
 	 * @return the set of coordinates
 	 */
 	private Set<Point> parse(String filename) {
-		// TODO Implement GPSMetricSpace's parse() method
+		// TODO implement parse() method
 		return null;
 	}
 

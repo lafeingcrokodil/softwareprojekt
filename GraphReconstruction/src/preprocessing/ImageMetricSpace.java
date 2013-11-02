@@ -1,5 +1,6 @@
 package preprocessing;
 
+import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,12 +28,12 @@ public class ImageMetricSpace extends HashSet<Point> implements MetricSpace<Poin
 	 * @param filename the name of the image file
 	 */
 	public ImageMetricSpace(String filename) {
-		// TODO Implement ImageMetricSpace constructor
+		// TODO implement constructor
 	}
 
 	@Override
 	public double distance(Point a, Point b) {
-		// TODO Implement ImageMetricSpace's distance() method
+		// TODO implement distance() method
 		return 0;
 	}
 
@@ -44,7 +45,7 @@ public class ImageMetricSpace extends HashSet<Point> implements MetricSpace<Poin
 	 * @return the set of coordinates
 	 */
 	private Set<Point> extractPixels(String filename) {
-		// TODO Implement ImageMetricSpace's extractPixels() method
+		// TODO implement extractPixels() method
 		return null;
 	}
 
