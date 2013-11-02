@@ -1,6 +1,6 @@
 package preprocessing;
 
-import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +17,7 @@ import main.MetricSpace;
  * 
  * @author Daniel Theus
  */
-public class GPSMetricSpace extends HashSet<Point> implements MetricSpace<Point> {
+public class GPSMetricSpace extends HashSet<Point2D> implements MetricSpace<Point2D> {
 
 	private static final long serialVersionUID = 639481610289888732L;
 
@@ -32,7 +32,7 @@ public class GPSMetricSpace extends HashSet<Point> implements MetricSpace<Point>
 	}
 
 	@Override
-	public double distance(Point a, Point b) {
+	public double distance(Point2D a, Point2D b) {
 		// TODO implement distance() method
 		return 0;
 	}
@@ -44,7 +44,7 @@ public class GPSMetricSpace extends HashSet<Point> implements MetricSpace<Point>
 	 * @param filename the file containing the coordinates
 	 * @return the set of coordinates
 	 */
-	private Set<Point> parse(String filename) {
+	private Set<Point2D> parse(String filename) {
 		// TODO implement parse() method
 		return null;
 	}
