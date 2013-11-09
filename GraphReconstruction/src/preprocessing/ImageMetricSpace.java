@@ -25,7 +25,7 @@ import main.MetricSpace;
  * 
  * @author Terese Haimberger
  */
-class ImageMetricSpace extends HashSet<Point2D> implements MetricSpace<Point2D> {
+public class ImageMetricSpace extends HashSet<Point2D> implements MetricSpace<Point2D> {
 
 	private static final long serialVersionUID = 8681862627788355587L;
 
