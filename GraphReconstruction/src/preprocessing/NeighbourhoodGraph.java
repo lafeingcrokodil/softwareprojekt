@@ -1,42 +1,56 @@
 package preprocessing;
 
+import java.awt.geom.Point2D;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import main.MetricGraph;
-import main.MetricSpace;
 
 /**
- * A graph connecting all nodes within a certain distance of each other.
+ * A graph consisting of the vertices and edges of an alpha complex.
+ * <p>
+ * An alpha complex is a subcomplex of the Delaunay triangulation of
+ * a set of points. A face of the Delaunay triangulation is included
+ * in the alpha complex if it passes the alpha test (i.e. its
+ * circumcircle is empty and has a radius no larger than alpha) or
+ * if it is part of a higher-dimensional face that passes the test.
+ * <p>
+ * The idea is to avoid directly connecting points that are far away
+ * from each other, while also avoiding a mess of edges among points
+ * that are close to each other. (This last point is a major
+ * difference between this graph and a Rips-Vietoris graph, where
+ * all points within a certain distance of each other are directly
+ * connected.)
  * 
  * @author Terese Haimberger
- * @param <V> the type of nodes in this graph
  */
-public class NeighbourhoodGraph<V> extends HashSet<V> implements MetricGraph<V>{
+public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<Point2D>{
+
+	private static final long serialVersionUID = -6029923560094150514L;
+
+	private Map<Point2D,Set<Point2D>> adjacencyLists = new HashMap<>();
 
 	/**
-	 * Creates a neighbourhood graph based on the specified metric space.
-	 * The set of nodes in the graph corresponds to the set of points in
-	 * the metric space, and an edge exists between two nodes if and only
-	 * if the distance between those two nodes is at most the specified radius.
+	 * Creates a neighbourhood graph based on the specified set of points.
 	 * 
-	 * @param space the metric space to be transformed into a neighbourhood graph
-	 * @param radius the maximum length of an edge
+	 * @param points the nodes of the neighbourhood graph
+	 * @param alpha the constant used in calculating the underlying alpha complex
 	 */
-	public NeighbourhoodGraph(MetricSpace<V> space, double radius) {
+	public NeighbourhoodGraph(Set<Point2D> points, double alpha) {
 		// TODO implement constructor
 	}
 
 	@Override
-	public double distance(V a, V b) {
+	public double distance(Point2D a, Point2D b) {
 		// TODO implement distance method (shortest path distance)
 		return 0;
 	}
 
 	@Override
-	public Set<V> getNeighbours(V node) {
-		// TODO implement getNeighbours method
-		return null;
+	public Set<Point2D> getNeighbours(Point2D node) {
+		return adjacencyLists.get(node);
 	}
 
 }
