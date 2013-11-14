@@ -1,18 +1,26 @@
 package main;
-
 import java.util.HashSet;
+
 	/*
 	 * @param <P> the type of points in the metric space
 	 */
-public class MetricSpaceImplemented<P> extends HashSet<E> implements MetricSpace<P>{
+
+public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace<P>{
 	
-	public MetricSpace<P> pointsInRadius(P p, double r){
-		//MetricSpace<P> space;
-		//return space;
+	public MetricSpaceImplemented<P> pointsInRadius(P p, double r){
 		/* 
-		 * TODO: returns MetricSpace composed of points within radius r
+		 * returns MetricSpaceImplemented composed of points within radius r
+		 * around point p.
 		 */
+		MetricSpaceImplemented<P> inRadiusSpace = new MetricSpaceImplemented<P>();
+		for (P point : this) { 
+			if(distance(p,point) <= r){
+				inRadiusSpace.add(point);
+			}
+		}
+		return inRadiusSpace;
 	}
+	
 	
 	public void labelAs(P p, int label){
 		/*
@@ -32,10 +40,13 @@ public class MetricSpaceImplemented<P> extends HashSet<E> implements MetricSpace
 		
 	}
 	
-	public MetricSpace<P> getLabeledAs(int label){
+	public MetricSpaceImplemented<P> getLabeledAs(int label){
 		/*
 		 * TODO: find all points labeled with "label"
 		 */
+		for (P point : this) { 
+
+			}
 	}
 	
 	
