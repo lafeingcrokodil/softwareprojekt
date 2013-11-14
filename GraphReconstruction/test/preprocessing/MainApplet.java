@@ -20,10 +20,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import model.Model;
-import controller.AddGPSPointController;
-import controller.EditPointController;
-import controller.RemoveGPSController;
+import preprocessing.Model;
+import preprocessing.AddGPSPointController;
+import preprocessing.EditPointController;
+import preprocessing.RemoveGPSController;
 
 public class MainApplet extends JApplet {
 	Model model;

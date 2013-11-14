@@ -2,8 +2,8 @@ package preprocessing;
 
 import javax.swing.DefaultListModel;
 
-import model.Model;
-import view.MainApplet;
+import preprocessing.Model;
+import preprocessing.MainApplet;
 
 public class EditPointController {
 	Model model;

@@ -19,7 +19,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
-import model.Model;
+import preprocessing.Model;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
