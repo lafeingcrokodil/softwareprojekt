@@ -7,7 +7,7 @@ public class RVPair <E>{
 
     public RVPair(E representative, LinkedList<E> neighbours)
     {
-        this.rep   = representative;
+        this.representative  = representative;
         this.neighbours = neighbours;
     }
 
