@@ -1,7 +1,6 @@
 package main;
 
 
-
 public class RVPair <E>{
     private <E> representative;
     private LinkedList<E> neighbours;
