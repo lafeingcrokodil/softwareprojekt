@@ -2,14 +2,14 @@ package main;
 
 
  
-public class RipsVietoris <E>{
+public class RipsVietoris<E>{
 	private LinkedList<RVPairs> components;
 
 	RipsVietoris(MetricSpace<E> Space, double radius){
-		for( <E> point1: Space){
-			LinkedList <E> init = new LinkedList<E>();
+		for( E point1: Space){
+			LinkedList<E> init = new LinkedList<E>();
 			RVPair buff = new RVPair(point1,init);
-			for( <E> point2: Space){
+			for( E point2: Space){
 				if( Space.distance(point1,point2) == 0){
 					//do nothing
 				}
@@ -26,7 +26,7 @@ public class RipsVietoris <E>{
 	public LinkedList<RVPairs> getComponents(){
 		return components;
 	}
-	public int deg(<E> point){
+	public int deg(E point){
 		for(RVPair current: components){
 			if(current.get_representative() == point){
 				return current.get_neighbours().size();
