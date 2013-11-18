@@ -1,5 +1,7 @@
 package main;
 
+import java.util.LinkedList;
+
 
 public class RVPair <E>{
     private E representative;

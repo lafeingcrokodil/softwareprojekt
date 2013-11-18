@@ -1,9 +1,11 @@
 package main;
 
+import java.util.LinkedList;
+
 
  
 public class RipsVietoris<E>{
-	private LinkedList<RVPairs> components;
+	private LinkedList<RVPair> components;
 
 	RipsVietoris(MetricSpace<E> Space, double radius){
 		for( E point1: Space){
@@ -23,7 +25,7 @@ public class RipsVietoris<E>{
 			this.components.addFirst(buff);
 		}
 	}
-	public LinkedList<RVPairs> getComponents(){
+	public LinkedList<RVPair> getComponents(){
 		return components;
 	}
 	public int deg(E point){
