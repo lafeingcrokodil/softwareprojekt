@@ -1,4 +1,4 @@
-package preprocessing;
+package visualization;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,10 +20,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import preprocessing.Model;
-import preprocessing.AddGPSPointController;
-import preprocessing.EditPointController;
-import preprocessing.RemoveGPSController;
+import visualization.AddGPSPointController;
+import visualization.EditPointController;
+import visualization.Model;
+import visualization.RemoveGPSController;
 
 public class MainApplet extends JApplet {
 	Model model;

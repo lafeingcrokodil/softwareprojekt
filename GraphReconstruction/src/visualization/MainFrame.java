@@ -1,4 +1,4 @@
-package preprocessing;
+package visualization;
 
 
 
@@ -19,11 +19,13 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
-import preprocessing.Model;
+import visualization.Model;
+import visualization.MyPanel;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
-public class GPSVisualizer extends JFrame {
+public class MainFrame extends JFrame {
 
 	Model model;
 	private JPanel contentPane;

@@ -1,4 +1,4 @@
-package preprocessing;
+package visualization;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import javax.swing.JApplet;
 import javax.swing.JPanel;
 
-import preprocessing.Model;
+import visualization.Model;
 
 public class MyPanel extends JPanel {
 

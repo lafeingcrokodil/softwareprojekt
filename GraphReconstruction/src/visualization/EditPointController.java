@@ -1,9 +1,9 @@
-package preprocessing;
+package visualization;
 
 import javax.swing.DefaultListModel;
 
-import preprocessing.Model;
-import preprocessing.MainApplet;
+import visualization.MainApplet;
+import visualization.Model;
 
 public class EditPointController {
 	Model model;
