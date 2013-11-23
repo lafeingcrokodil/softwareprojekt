@@ -27,6 +27,16 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 		return inRadiusSpace;
 	}
 	
+	/*
+	 * returns all points that are contained in space1 but not in space2 (difference quantity)
+	 */
+	public MetricSpaceImplemented<P> differenceSet(MetricSpaceImplemented<P> space1, MetricSpaceImplemented<P> space2){
+		for(P point : space2){
+			space1.remove(point);
+		}
+		return space1;
+	}
+	
 	
 	public void labelAs(P p, int label){
 		/*
@@ -55,7 +65,7 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 		}
 	}
 	
-	public MetricSpaceImplemented<P> getLabeledAs (int label) {
+	public MetricSpaceImplemented<P> getLabeledAs (int label){
 		//TODO: Add exception?
 		if(label == 1) return prelBranch;
 		if(label == 2) return edge;
