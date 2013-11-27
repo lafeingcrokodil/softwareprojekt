@@ -24,6 +24,10 @@ import main.MetricSpace;
  */
 public class GPSMetricSpace extends HashSet<Point2D> implements
 		MetricSpace<Point2D> {
+	
+	
+	
+	Set<Point2D> koordinates = new HashSet<Point2D>();
 
 	private static final long serialVersionUID = 639481610289888732L;
 
@@ -107,13 +111,13 @@ public class GPSMetricSpace extends HashSet<Point2D> implements
 			String write2 = (String) tokenizer.nextToken();
 
 			if (write2.contains("!")) {
-				// koordX.add(Integer.parseInt(write2.replace("!", "")+"\n"));
+				
 				write2 = write2.replace("!", "");
 				write2 = write2.replace(".", "");
 				koordX.add(Integer.parseInt(write2));
 			}
 			if (write2.contains("#")) {
-				// koordY.add(Integer.parseInt(write2.replace("#", "")+"\n"));
+				
 
 				write2 = write2.replace("#", "");
 				write2 = write2.replace(".", "");
@@ -121,7 +125,7 @@ public class GPSMetricSpace extends HashSet<Point2D> implements
 			}
 		}
 
-		// loop to place them into the set
+		// loop -> place them into the set
 
 		for (int i = 0; i < koordY.size(); i++) {
 			Point2D point = new Point2D.Double();
@@ -134,4 +138,54 @@ public class GPSMetricSpace extends HashSet<Point2D> implements
 		return koordinates;
 	}
 
+	
+public Set<Point2D> reducePs(int parts){
+		
+		// divide the koordinatesystem into parts*parts pieces
+		
+		Point2D[][] reducedPoints= new Point2D[parts][parts];
+		
+		Set<Point2D> copyOfKoordinates = new HashSet<Point2D>();
+		copyOfKoordinates = koordinates;
+				
+		Set<Point2D> returnSet = new HashSet<Point2D>();
+		
+		for (int i=0;i<parts;i++){
+			for (int j=0; j<parts;j++){
+				while(copyOfKoordinates.iterator().hasNext()){
+					Point2D point = copyOfKoordinates.iterator().next();
+					if(point.getX()<(copyOfKoordinates.size()/parts)*i){
+						if (point.getY()<(copyOfKoordinates.size()/parts)*j){
+							if (reducedPoints[i][j]!=null){
+								reducedPoints[i][j]= point;
+							}else{
+								double x,y;
+								x = (reducedPoints[i][j].getX() + point.getX())/2;
+								y = (reducedPoints[i][j].getY() + point.getY())/2;
+								reducedPoints[i][j].setLocation(x, y);
+								
+							}
+						}
+					}
+				}
+			}
+		
+		System.out.println (reducedPoints.toString());	
+		
+		
+		
+		
+		for (int k=0;k<parts;k++){
+			for (int l=0; l<parts;l++){
+				if(reducedPoints[k][l]!=null){
+					returnSet.add(reducedPoints[k][l]);
+				}
+				
+			}
+		}
+		
+		}
+		return returnSet;
+		
+	}
 }
