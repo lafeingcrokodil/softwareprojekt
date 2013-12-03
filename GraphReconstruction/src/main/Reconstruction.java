@@ -3,78 +3,94 @@ package main;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Reconstruction<P>{
-		private MetricSpace<P> inputSpace;
-		private MetricSpaceImplemented<P> workspace;
-		private double radius;
-		private ReconstructedGraph<P> graph;
-		
-		Reconstruction(MetricSpace<P> space, double r){
-			this.inputSpace = space;
-			this.workspace = new MetricSpaceImplemented<P>(space);
-			this.radius = r;
-			this.reconstruction();
-		}
-		
-		private void reconstruction(){
-			/*
-			 * Umsetzung des Algorithmus unter Verwendung der
-			 * Hilfsklassen. #xx gibt Zeilennummerierung im Paper wieder
-			 */
-			 //#1 Labeling Points as edge or branch
-			 Iterator<P> iter = this.workspace.iterator(); //#2
-		        while (iter.hasNext()) {
-		            P punkt = iter.next();
-		            MetricSpaceImplemented<P> space;
-		            
-		            space = this.workspace.intersectionset(this.workspace.pointsInRadius(punkt, 5*this.radius/3),
-		            										this.workspace.pointsInRadius(punkt, this.radius)    );//#3
-		            RipsVietoris<P> r = new RipsVietoris<P>(space,this.radius*4/3);//4
-		            
-		            if (r.deg()==2) {//#5
-		            	/* label: 		 
-		            	 * Label 1 = Preliminary Branch
-		            	 * Label 2 = Edge
-		            	 * Label 3 = Branch
-		            	 */
-		            	this.workspace.labelAs(punkt, 2);//#6
-		            }
-		            else {//#7
-		            	this.workspace.labelAs(punkt, 1);//#8
-		            }//#9
-		            
+public class Reconstruction<P> {
+	private MetricSpace<P> inputSpace;
+	private MetricSpaceImplemented<P> workspace;
+	private double radius;
+	private Graph<P> returngraph;
 
-		        }//#10
-		        Iterator<P> iter2 = this.workspace.iterator();//#11
-		        while (iter2.hasNext()) {
-		        	 P punkt = iter2.next();
-		        	 if (this.workspace.isLabeledAs(punkt)==0){
-				        	 this.workspace.labelInRadius(punkt, 2*this.radius);// branch point label uebergeben ?
-		        		 
-		        	 }
-		        }
-		        
-		        
-		        MetricSpaceImplemented<P> edgepoints;//#11,#12
-		        MetricSpaceImplemented<P> branchpoints;
-		        edgepoints = this.workspace.getLabeledAs(2);
-		        branchpoints = this.workspace.getLabeledAs(3);
-		        
-		        //#14 Reconstructing the Graph Structure
-		        RipsVietoris<P> edgeRips = new RipsVietoris<P>(edgepoints,this.radius*2);//#15
-		        RipsVietoris<P> branchRips = new RipsVietoris<P>(branchpoints,this.radius*2);
-		        LinkedList<RVPair> vertices = edgeRips.getComponents();
-		        
-		        
-		        
-		        /*
-		         * ...
-		         * ab hier weiter in arbeit
-		         */
+	Reconstruction(MetricSpace<P> space, double r) {
+		this.inputSpace = space;
+		this.workspace = new MetricSpaceImplemented<P>(space);
+		this.radius = r;
+		this.reconstruction();
+	}
+
+	private void reconstruction() {
+		/*
+		 * Umsetzung des Algorithmus unter Verwendung der Hilfsklassen. #xx gibt
+		 * Zeilennummerierung im Paper wieder
+		 */
+		// #1 Labeling Points as edge or branch
+		Iterator<P> iter = this.workspace.iterator(); // #2
+		while (iter.hasNext()) {
+			P punkt = iter.next();
+			MetricSpaceImplemented<P> space;
+
+			space = this.workspace.differenceSet(
+					this.workspace.pointsInRadius(punkt, 5 * this.radius / 3),
+					this.workspace.pointsInRadius(punkt, this.radius));// #3
+			RipsVietoris<P> r = new RipsVietoris<P>(space, this.radius * 4 / 3);// 4
+
+			if (r.deg(punkt) == 2) {// #5
+				/*
+				 * label: Label 1 = Preliminary Branch Label 2 = Edge Label 3 =
+				 * Branch
+				 */
+				this.workspace.labelAs(punkt, 2);// #6
+			} else {// #7
+				this.workspace.labelAs(punkt, 1);// #8
+			}// #9
+
+		}// #10
+		Iterator<P> iter2 = this.workspace.iterator();// #11
+
+		while (iter2.hasNext()) {
+			P punkt = iter2.next();
+			if (this.workspace.getLabeledAs(0).contains(punkt)) {
+				this.workspace.labelInRadius(punkt, 2 * this.radius);// #11
+
+			}
 		}
-		
-		public ReconstructedGraph<P> get_graph(){
-			return this.graph;
-		}
-		
+
+		MetricSpaceImplemented<P> edgepoints;// #12,#13
+		MetricSpaceImplemented<P> branchpoints;
+		edgepoints = this.workspace.getLabeledAs(2);
+		branchpoints = this.workspace.getLabeledAs(3);
+
+		// #14 Reconstructing the Graph Structure
+		RipsVietoris<P> kantenRips = new RipsVietoris<P>(edgepoints,
+				this.radius * 2);// #15
+		RipsVietoris<P> eckenRips = new RipsVietoris<P>(branchpoints,
+				this.radius * 2);
+		LinkedList<RVPair<P>> kanten = kantenRips.getComponents(); // #16
+
+		ReconstructedSimpleGraph<P> graph = this.findeKanten(kantenRips,
+				eckenRips); // #17
+
+		// #18 Reconstructing the Metric
+
+		this.returngraph = createGraphwithDiameter(graph);
+	}
+
+	private Graph<P> createGraphwithDiameter(ReconstructedSimpleGraph<P> graph) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ReconstructedSimpleGraph<P> findeKanten(RipsVietoris<P> kantenRips,
+			RipsVietoris<P> eckenRips) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Graph<P> get_graph() {
+		return this.returngraph;
+	}
+
+	private double getDiameter(RVPair<P> punkte) {
+		// @ TODO
+		return 0.0;
+	}
+
 }
