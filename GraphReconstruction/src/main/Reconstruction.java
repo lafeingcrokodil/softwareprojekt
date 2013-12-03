@@ -2,6 +2,7 @@ package main;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Reconstruction<P> {
 	private MetricSpace<P> inputSpace;
@@ -75,6 +76,18 @@ public class Reconstruction<P> {
 
 	private Graph<P> createGraphwithDiameter(ReconstructedSimpleGraph<P> graph) {
 		// TODO Auto-generated method stub
+		List<P> nodes = graph.getAllNodes();
+		Iterator<P> iter3 = nodes.iterator();
+
+		while (iter3.hasNext()) {
+			P punkt = iter3.next();
+			List<P> nachbarn = graph.getNeighbours(punkt);
+			Iterator<P> iter4 = nachbarn.iterator();
+			while (iter4.hasNext()) {
+				P punkt2 = iter4.next();
+				graph.setDistance(punkt, punkt2, this.getDiameter(graph.getComponent(punkt, punkt2)));
+			}
+		}
 		return null;
 	}
 

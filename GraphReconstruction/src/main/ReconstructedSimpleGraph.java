@@ -24,11 +24,15 @@ public class ReconstructedSimpleGraph<V> implements Graph<V> {
 		// TODO
 	}
 	
-	public void setKante(V nodeA, V nodeB){
+	public void setKante(V nodeA, V nodeB, RVPair<V> punkte){
 		
 	}
 	public void setDistance(V nodeA, V nodeB, double distance){
 		
+	}
+	public RVPair<V> getComponent(V nodeA, V nodeB){
+		//Todo
+		return null;
 	}
 	@Override
 	public double getDistance(V node1, V node2) {
