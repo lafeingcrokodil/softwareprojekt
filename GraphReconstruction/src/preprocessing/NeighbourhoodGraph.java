@@ -3,6 +3,7 @@ package preprocessing;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 
 	private static final long serialVersionUID = -6029923560094150514L;
 
-	private Map<Point2D,Set<Point2D>> adjacencyLists = new HashMap<>();
+	private Map<Point2D,List<Edge<Point2D>>> adjacencyLists = new HashMap<>();
 
 	/**
 	 * Creates a neighbourhood graph based on the specified set of points.
@@ -49,7 +50,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	}
 
 	@Override
-	public Set<Point2D> getNeighbours(Point2D node) {
+	public List<Edge<Point2D>> getNeighbours(Point2D node) {
 		return adjacencyLists.get(node);
 	}
 
