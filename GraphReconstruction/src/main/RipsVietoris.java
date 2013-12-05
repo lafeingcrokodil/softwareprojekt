@@ -23,18 +23,16 @@ public class RipsVietoris<E>{
 				}
 			}
 			this.components.addFirst(buff);
+			Space.remove(buff.get_neighbours());
 		}
 	}
 	public LinkedList<RVPair<E>> getComponents(){
 		return components;
 	}
-	public int deg(E point){
-		for(RVPair<E> current: components){
-			if(current.get_representative() == point){
-				return current.get_neighbours().size();
-			}
-		}
-		return 0; // temporary solution
+	public int deg(){
+		
+				return components.size();
+		
 	}
 			        
                 
