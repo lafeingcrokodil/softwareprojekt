@@ -12,16 +12,21 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	MetricSpaceImplemented<P> edge = new MetricSpaceImplemented<P>();
 	MetricSpaceImplemented<P> prelBranch = new MetricSpaceImplemented<P>();
 	MetricSpaceImplemented<P> branch = new MetricSpaceImplemented<P>();
-	
+	/*
+	 * Constructors
+	 */
 	public MetricSpaceImplemented(MetricSpace<P> space) {
-		// TODO Auto-generated constructor stub
-		// Konstruktor fehlte noch, bekommt die punktmenge aus preprocessing uebergeben
+		/*
+		 * receives space from preprocessing and turns it into a MetricSpace
+		 */
+		this.addAll(space);
 	}
 	public MetricSpaceImplemented() {
-		// TODO 
-		// Erstellt MetricSpace ohne punkte
-	}
 
+	}
+	/*
+	 * Methods
+	 */
 	public MetricSpaceImplemented<P> pointsInRadius(P p, double r){
 		/* 
 		 * returns MetricSpaceImplemented composed of points within radius r
