@@ -18,18 +18,17 @@ import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 /**
  * A graph consisting of the vertices and edges of an alpha complex.
  * <p>
- * An alpha complex is a subcomplex of the Delaunay triangulation of
- * a set of points. A face of the Delaunay triangulation is included
- * in the alpha complex if it passes the alpha test (i.e. its
- * circumcircle is empty and has a radius no larger than alpha) or
- * if it is part of a higher-dimensional face that passes the test.
+ * An alpha complex is a subcomplex of the Delaunay triangulation of a set of
+ * points. A face of the Delaunay triangulation is included in the alpha complex
+ * if it passes the alpha test (i.e. its circumcircle is empty and has a radius
+ * no larger than alpha) or if it is part of a higher-dimensional face that
+ * passes the test.
  * <p>
- * The idea is to avoid directly connecting points that are far away
- * from each other, while also avoiding a mess of edges among points
- * that are close to each other. (This last point is a major
- * difference between this graph and a Rips-Vietoris graph, where
- * all points within a certain distance of each other are directly
- * connected.)
+ * The idea is to avoid directly connecting points that are far away from each
+ * other, while also avoiding a mess of edges among points that are close to
+ * each other. (This last point is a major difference between this graph and a
+ * Rips-Vietoris graph, where all points within a certain distance of each other
+ * are directly connected.)
  * 
  * @author Terese Haimberger
  */
@@ -49,8 +48,25 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 * @param alpha the constant used in calculating the underlying alpha complex
 	 */
 	public NeighbourhoodGraph(Set<Point2D> points, double alpha) {
-		addAllTriangulationEdges(points);
-		removeLongEdges(alpha);
+		// calculate the Delaunay triangulation of the point set
+		DelaunayTriangulationBuilder triangulator = new DelaunayTriangulationBuilder();
+		triangulator.setSites(toCoordinateSet(points));
+		// ASSUMPTION getEdges() always returns a MultiLineString (as claimed in documentation)
+		MultiLineString edges = (MultiLineString) triangulator.getEdges(new GeometryFactory());
+
+		// add edges of the triangulation to this graph
+		for (int i = 0; i < edges.getNumGeometries(); i++) { // loop over edges
+			Coordinate[] coordinates = edges.getGeometryN(i).getCoordinates();
+			// ASSUMPTION each edge has exactly two vertices
+			Point2D a = new Point2D.Double(coordinates[0].x, coordinates[0].y);
+			Point2D b = new Point2D.Double(coordinates[1].x, coordinates[1].y);
+			double edgeLength = a.distance(b); // Euclidean distance
+			// add edge to graph if its circumcircle has a radius of at most alpha
+			if (edgeLength <= 2 * alpha) {
+				addAdjacency(a, b, edgeLength);
+				addAdjacency(b, a, edgeLength);
+			}
+		}
 	}
 
 	@Override
@@ -62,34 +78,6 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	@Override
 	public List<Edge<Point2D>> getNeighbours(Point2D node) {
 		return adjacencyLists.get(node);
-	}
-
-	/**
-	 * Adds all edges of the Delaunay triangulation of the given set of points to
-	 * this graph. The lengths of each edge is the Euclidean distance between
-	 * the edge's two vertices.
-	 * 
-	 * @param points a set of points in two-dimensional space
-	 */
-	private void addAllTriangulationEdges(Set<Point2D> points) {
-		DelaunayTriangulationBuilder triangulator = new DelaunayTriangulationBuilder();
-		triangulator.setSites(toCoordinateSet(points));
-		// ASSUMPTION getEdges() always returns a MultiLineString (as claimed in documentation)
-		MultiLineString edges = (MultiLineString) triangulator.getEdges(new GeometryFactory());
-		for (int i = 0; i < edges.getNumGeometries(); i++) { // loop over edges
-			Coordinate[] coordinates = edges.getGeometryN(i).getCoordinates();
-			// ASSUMPTION each edge has exactly two vertices
-			addEdge(coordinates[0], coordinates[1]);
-		}
-	}
-
-	/**
-	 * Remove all edges whose circumcircle has a radius greater than alpha.
-	 * 
-	 * @param alpha the maximum circumcircle radius
-	 */
-	private void removeLongEdges(double alpha) {
-		// TODO implement removeLongEdges method
 	}
 
 	/**
@@ -106,30 +94,15 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	}
 
 	/**
-	 * Adds an edge to this graph. After this method is called,
-	 * the two specified coordinates will be considered adjacent
-	 * to each other (in both directions).
-	 * 
-	 * @param a a vertex of the edge to be added
-	 * @param b the other vertex of the edge to be added
-	 */
-	private void addEdge(Coordinate a, Coordinate b) {
-		Point2D pointA = new Point2D.Double(a.x, a.y);
-		Point2D pointB = new Point2D.Double(b.x, b.y);
-		addAdjacency(pointA, pointB);
-		addAdjacency(pointB, pointA);
-	}
-
-	/**
 	 * Adds a one-sided adjacency to this graph.
 	 * 
 	 * @param point the point, to which an adjacency is to be added
 	 * @param adjacentPoint the adjacent point
 	 */
-	private void addAdjacency(Point2D point, Point2D adjacentPoint) {
+	private void addAdjacency(Point2D point, Point2D adjacentPoint, double edgeLength) {
 		if (!adjacencyLists.containsKey(point))
 			adjacencyLists.put(point, new ArrayList<Edge<Point2D>>());
-		adjacencyLists.get(point).add(new Edge<>(adjacentPoint, point.distance(adjacentPoint)));
+		adjacencyLists.get(point).add(new Edge<>(adjacentPoint, edgeLength));
 	}
 
 }
