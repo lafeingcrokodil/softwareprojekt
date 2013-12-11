@@ -9,19 +9,34 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	/*
 	 * MetricSpaceImplemented instances for grouping labels
 	 */
-	MetricSpaceImplemented<P> edge = new MetricSpaceImplemented<P>();
-	MetricSpaceImplemented<P> prelBranch = new MetricSpaceImplemented<P>();
-	MetricSpaceImplemented<P> branch = new MetricSpaceImplemented<P>();
+
+	MetricSpaceImplemented<P> edge;
+	MetricSpaceImplemented<P> prelBranch;
+	MetricSpaceImplemented<P> branch;
 	/*
 	 * Constructors
 	 */
 	public MetricSpaceImplemented(MetricSpace<P> space) {
+		//TESTED: ok!
 		/*
 		 * receives space from preprocessing and turns it into a MetricSpace
+		 * TODO: distance method?
 		 */
 		this.addAll(space);
+		edge = new MetricSpaceImplemented<P>("noSpace");
+		prelBranch  = new MetricSpaceImplemented<P>("noSpace");
+		branch = new MetricSpaceImplemented<P>("noSpace");
+
 	}
 	public MetricSpaceImplemented() {
+		edge = new MetricSpaceImplemented<P>("noSpace");
+		prelBranch  = new MetricSpaceImplemented<P>("noSpace");
+		branch = new MetricSpaceImplemented<P>("noSpace");
+	}
+	/*
+	 * Constructor that doesn't invoke the MetricSpaceImplemented-Constructor
+	 */
+	public MetricSpaceImplemented(String noOtherSpace){
 
 	}
 	/*
@@ -45,6 +60,7 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	 * returns all points that are contained in space1 but not in space2 (difference quantity)
 	 */
 	public MetricSpaceImplemented<P> differenceSet(MetricSpaceImplemented<P> space1, MetricSpaceImplemented<P> space2){
+		//TESTED: ok!
 		for(P point : space2){
 			space1.remove(point);
 		}
@@ -53,12 +69,16 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	
 	
 	public void labelAs(P p, int label){
+		//TESTED: ok!
 		/*
 		 * Label 1 = Preliminary Branch
 		 * Label 2 = Edge
 		 * Label 3 = Branch: relabeling: point must be removed from preliminary label-list
 		 * TODO: might be implemented more efficiently
 		 */
+		/*edge = new MetricSpaceImplemented<P>();
+		prelBranch  = new MetricSpaceImplemented<P>();
+		branch = new MetricSpaceImplemented<P>();*/
 		if(label == 1) prelBranch.add(p);
 		if(label == 2) edge.add(p);
 		if(label == 3){
@@ -80,6 +100,7 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	}
 	
 	public MetricSpaceImplemented<P> getLabeledAs (int label){
+		//TESTED: ok!
 		//TODO: Add exception?
 		if(label == 1) return prelBranch;
 		if(label == 2) return edge;
