@@ -5,33 +5,32 @@ import java.util.LinkedList;
 
  
 public class RipsVietoris<E>{
-	private LinkedList<RVPair<E>> components;
+	private LinkedList<LinkedList<E>> components;
 
 	RipsVietoris(MetricSpace<E> Space, double radius){
 		for( E point1: Space){
 			LinkedList<E> init = new LinkedList<E>();
-			RVPair<E> buff = new RVPair<E>(point1,init);
+			init.addFirst(point1);
 			for( E point2: Space){
 				if( Space.distance(point1,point2) == 0){
 					//do nothing
 				}
 				else if( Space.distance(point1,point2) <= radius){
-					buff.add_neighbour(point2);
+					init.addFirst(point2);
 				}
 				else{
 					//do nothing
 				}
 			}
-			this.components.addFirst(buff);
-			Space.remove(buff.get_neighbours());
+			this.components.addFirst(init);
+			Space.remove(init);
 		}
 	}
-	public LinkedList<RVPair<E>> getComponents(){
+	public LinkedList<LinkedList<E>> getComponents(){
 		return components;
 	}
 	public int deg(){
-		
-				return components.size();
+		return components.size();
 		
 	}
 			        
