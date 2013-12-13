@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.junit.Test;
 
+import preprocessing.EuclideanMetricSpace;
+
 import static org.junit.Assert.*;
 
 public class MetricSpaceImplementedTest {
@@ -17,11 +19,11 @@ public class MetricSpaceImplementedTest {
 	Point newPoint5 = new Point(3,4);
 	Point newPoint6 = new Point(2,2);
 	Point newPoint7 = new Point(1,1);
-	/*
+	
 	@Test
 	public void testPointsInRadius(){
-		Set<Point> pointSet = new HashSet<Point>();
-		MetricSpaceImplemented<Point> space = new MetricSpaceImplemented();
+		EuclideanMetricSpace euc = new EuclideanMetricSpace();
+		MetricSpaceImplemented<Point> space = new MetricSpaceImplemented(euc);
 		space.add(newPoint1);
 		space.add(newPoint2);
 		space.add(newPoint3);
@@ -32,11 +34,30 @@ public class MetricSpaceImplementedTest {
 		MetricSpaceImplemented<Point> expectedSpace = new MetricSpaceImplemented();
 		expectedSpace.add(newPoint1);
 		expectedSpace.add(newPoint4);
-		expectedSpace.add(newPoint7);
 		expectedSpace.add(newPoint2);
 		MetricSpaceImplemented<Point> inR = space.pointsInRadius(newPoint2, 1);
 		assertEquals(expectedSpace,inR);
-	}*/
+	}
+	
+	@Test
+	public void testLabelPointsInRadius(){
+		EuclideanMetricSpace euc = new EuclideanMetricSpace();
+		MetricSpaceImplemented<Point> space = new MetricSpaceImplemented(euc);
+		space.add(newPoint1);
+		space.add(newPoint2);
+		space.add(newPoint3);
+		space.add(newPoint4);
+		space.add(newPoint5);
+		space.add(newPoint6);
+		space.add(newPoint7);
+		MetricSpaceImplemented<Point> expectedSpace = new MetricSpaceImplemented();
+		expectedSpace.add(newPoint1);
+		expectedSpace.add(newPoint4);
+		expectedSpace.add(newPoint2);
+		MetricSpaceImplemented<Point> inR = space.pointsInRadius(newPoint2, 1);
+		space.labelInRadius(newPoint2,1);
+		assertEquals(space.branch,inR);
+	}
 	
 	@Test
 	public void testLabelAsAndGetLabeledAs(){
@@ -62,7 +83,7 @@ public class MetricSpaceImplementedTest {
 		assertEquals(expectedSpace1, space.prelBranch);
 		assertEquals(expectedSpace2, space.edge);
 		assertEquals(expectedSpace3, space.branch);
-		//Test getLabelesAs()
+		//Test getLabeledAs()
 		assertEquals(expectedSpace1, space.getLabeledAs(1));
 		assertEquals(expectedSpace2, space.getLabeledAs(2));
 		assertEquals(expectedSpace3, space.getLabeledAs(3));
@@ -89,6 +110,7 @@ public class MetricSpaceImplementedTest {
 	}
 	@Test
 	public void testConstructor(){
+		
 		MetricSpaceImplemented<Point> inputSpace = new MetricSpaceImplemented();
 		inputSpace.add(newPoint1);
 		inputSpace.add(newPoint2);

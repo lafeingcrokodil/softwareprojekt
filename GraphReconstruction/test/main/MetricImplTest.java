@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
+import preprocessing.EuclideanMetricSpace;
+
 public class MetricImplTest {
 
 	/**
@@ -11,7 +13,7 @@ public class MetricImplTest {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		MetricSpaceImplemented<Point> space = new MetricSpaceImplemented();
+
 		Point newPoint1 = new Point(1,0);
 		Point newPoint2 = new Point(0,0);
 		Point newPoint3 = new Point(2,0);
@@ -19,17 +21,29 @@ public class MetricImplTest {
 		Point newPoint5 = new Point(3,4);
 		Point newPoint6 = new Point(2,2);
 		Point newPoint7 = new Point(1,1);
+		
 		//Test pointsInRadius
-		/*
+		EuclideanMetricSpace euc = new EuclideanMetricSpace();
+		MetricSpaceImplemented<Point> space = new MetricSpaceImplemented(euc);
 		space.add(newPoint1);
 		space.add(newPoint2);
 		space.add(newPoint3);
 		space.add(newPoint4);
 		space.add(newPoint5);
 		space.add(newPoint6);
+		space.add(newPoint7);
+		//System.out.println(space.distance(newPoint7,newPoint2));
+		/*for(Point p : space){
+			System.out.println(p.x+", "+p.y);
+			System.out.println(space.distance(newPoint2,p));
+		}*/
+		MetricSpaceImplemented<Point> inR = space.pointsInRadius(newPoint2, 3);
+		for(Point p : inR){
+			System.out.println(p.x+", "+p.y);
+		}
 		
-		MetricSpaceImplemented<Point> inR = space.pointsInRadius(newPoint2, 1);
 		
+		/*
 		//Test labelAs
 		space.labelAs(newPoint1, 1);
 		space.labelAs(newPoint2, 2);
@@ -68,7 +82,7 @@ public class MetricImplTest {
 		for(Point each: prelbranches){
 			System.out.println("a: " + each.x + ", b: " + each.y);
 		}
-		*/
+		
 		
 		
 		//Test differenceSet
@@ -87,7 +101,7 @@ public class MetricImplTest {
 		}
 		
 		MetricSpaceImplemented<Point> constructorTestSpace = new MetricSpaceImplemented(biggerSpace);
-		
+		*/
 	}
 
 }
