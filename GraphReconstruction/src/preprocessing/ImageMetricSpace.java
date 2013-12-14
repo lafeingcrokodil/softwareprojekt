@@ -11,8 +11,6 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import main.MetricSpace;
-
 /**
  * A metric space based on an image (e.g. a hand-drawn sketch of a graph).
  * 
@@ -25,7 +23,7 @@ import main.MetricSpace;
  * 
  * @author Terese Haimberger
  */
-public class ImageMetricSpace extends HashSet<Point2D> implements MetricSpace<Point2D> {
+public class ImageMetricSpace extends NeighbourhoodGraph {
 
 	private static final long serialVersionUID = 8681862627788355587L;
 
@@ -34,18 +32,13 @@ public class ImageMetricSpace extends HashSet<Point2D> implements MetricSpace<Po
 	 * the specified image file.
 	 * 
 	 * @param filename the name of the image file
+	 * @param alpha the constant used in calculating the underlying alpha complex
 	 * @throws IOException if an error occurs while reading the image
 	 */
-	public ImageMetricSpace(String filename) throws IOException {
+	public ImageMetricSpace(String filename, double alpha) throws IOException {
+		super(alpha);
 		BufferedImage image = ImageIO.read(new File(filename));
-		addAll(extractPixels(image, Color.BLACK));
-		// TODO implement rest of constructor
-	}
-
-	@Override
-	public double distance(Point2D a, Point2D b) {
-		// TODO implement distance() method
-		return 0;
+		setVertices(extractPixels(image, Color.BLACK));
 	}
 
 	/**
@@ -55,8 +48,8 @@ public class ImageMetricSpace extends HashSet<Point2D> implements MetricSpace<Po
 	 * @param colour the colour of the pixels to be extracted
 	 * @return the set of extracted pixel coordinates
 	 */
-	private Set<Point> extractPixels(BufferedImage image, Color colour) {
-		Set<Point> coordinates = new HashSet<Point>();
+	private Set<Point2D> extractPixels(BufferedImage image, Color colour) {
+		Set<Point2D> coordinates = new HashSet<Point2D>();
 		Point topLeft = new Point(image.getMinX(), image.getMinY());
 		Point bottomRight = new Point(topLeft.x + image.getWidth(), topLeft.y + image.getHeight());
 		for (int y = topLeft.y; y < bottomRight.y; y++) {

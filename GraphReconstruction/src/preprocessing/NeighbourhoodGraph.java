@@ -37,17 +37,33 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	private static final long serialVersionUID = -6029923560094150514L;
 
 	/**
-	 * A map storing the adjacencies between nodes in this graph.
+	 * A map storing the adjacencies between vertices in this graph.
 	 */
 	private Map<Point2D, List<Edge<Point2D>>> adjacencyLists = new HashMap<>();
 
 	/**
-	 * Creates a neighbourhood graph based on the specified set of points.
+	 * The constant used in calculating the underlying alpha complex.
+	 */
+	private double alpha;
+
+	/**
+	 * Creates a new empty neighbourhood graph.
 	 * 
-	 * @param points the nodes of the neighbourhood graph
 	 * @param alpha the constant used in calculating the underlying alpha complex
 	 */
-	public NeighbourhoodGraph(Set<Point2D> points, double alpha) {
+	public NeighbourhoodGraph(double alpha) {
+		this.alpha = alpha;
+	}
+
+	/**
+	 * Sets the vertices of this graph to consist of the specified point set.
+	 * 
+	 * @param points the new vertices
+	 */
+	public void setVertices(Set<Point2D> points) {
+		clear();        // remove any vertices that were previously added to this graph
+		addAll(points); // add all specified points to the set of vertices
+
 		// calculate the Delaunay triangulation of the point set
 		DelaunayTriangulationBuilder triangulator = new DelaunayTriangulationBuilder();
 		triangulator.setSites(toCoordinateSet(points));
@@ -76,8 +92,8 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	}
 
 	@Override
-	public List<Edge<Point2D>> getNeighbours(Point2D node) {
-		return adjacencyLists.get(node);
+	public List<Edge<Point2D>> getNeighbours(Point2D vertex) {
+		return adjacencyLists.get(vertex);
 	}
 
 	/**
