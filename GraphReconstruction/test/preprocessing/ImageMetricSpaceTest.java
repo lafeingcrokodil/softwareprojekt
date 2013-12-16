@@ -23,7 +23,7 @@ public class ImageMetricSpaceTest {
 		expectedSet.add(new Point(2, 0));
 		expectedSet.add(new Point(1, 1));
 
-		MetricSpace<Point2D> space = new ImageMetricSpace("images/tinyTest.png");
+		MetricSpace<Point2D> space = new ImageMetricSpace("images/tinyTest.png", 2);
 
 		assertEquals(space, expectedSet);
 	}
