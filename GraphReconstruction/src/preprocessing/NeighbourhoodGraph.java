@@ -42,6 +42,12 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	private Map<Point2D, List<Edge<Point2D>>> adjacencyLists = new HashMap<>();
 
 	/**
+	 * A map storing the shortest path distances between each pair of points.
+	 */
+	// TODO save space by avoiding redundancy?
+	private Map<Point2D, Map<Point2D, Double>> distanceMap = new HashMap<>();
+
+	/**
 	 * The constant used in calculating the underlying alpha complex.
 	 */
 	private double alpha;
@@ -83,12 +89,52 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 				addAdjacency(b, a, edgeLength);
 			}
 		}
+
+		// calculate the shortest path distances between the vertices of the graph
+		calculateAllDistances();
+	}
+
+	/**
+	 * Calculates all shortest path distances between vertices of this graph and
+	 * stores the results in a distance map. Implemented using the Floyd–Warshall
+	 * dynamic programming algorithm.
+	 */
+	private void calculateAllDistances() {
+		// initialization (only direct paths allowed)
+		for (Point2D vertex : this) {
+			Map<Point2D, Double> newMap = new HashMap<>();
+			newMap.put(vertex, 0.0); // d(v,v) = 0
+			for (Edge<Point2D> edge : getNeighbours(vertex)) {
+				newMap.put(edge.neighbour, edge.distance);
+			}
+			distanceMap.put(vertex, newMap);
+		}
+
+		// recursive step (intermediate vertices introduced one by one)
+		for (Point2D via : this) {			// iterate over possible intermediate vertices
+			for (Point2D from : this) {		// path starts at this vertex
+				for (Point2D to : this) {	// path ends at this vertex
+					try {
+						// calculate length of indirect path (from -> via -> to)
+						double newDistance = distance(from, via) + distance(via, to);
+						// check if indirect path is better than current shortest path
+						if (!distanceMap.get(from).containsKey(to) || newDistance < distance(from, to)) {
+							distanceMap.get(from).put(to, newDistance);
+						}
+					} catch (NotConnectedException e) { // indirect path doesn't exist
+						// keep old distance
+					}
+				}
+			}
+		}
 	}
 
 	@Override
 	public double distance(Point2D a, Point2D b) {
-		// TODO implement distance method (shortest path distance)
-		return 0;
+		if (distanceMap.containsKey(a) && distanceMap.get(a).containsKey(b))
+			return distanceMap.get(a).get(b);
+		else
+			throw new NotConnectedException(a, b);
 	}
 
 	@Override
@@ -119,6 +165,43 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 		if (!adjacencyLists.containsKey(point))
 			adjacencyLists.put(point, new ArrayList<Edge<Point2D>>());
 		adjacencyLists.get(point).add(new Edge<>(adjacentPoint, edgeLength));
+	}
+
+	/**
+	 * Thrown by the distance method if no shortest path can be found between two
+	 * points because they are not connected by any path.
+	 */
+	public static class NotConnectedException extends RuntimeException {
+
+		private static final long serialVersionUID = 5479820445920034959L;
+
+		/** The origin of the non-existent path. */
+		public Point2D origin;
+
+		/** The destination of the non-existent path. */
+		public Point2D destination;
+
+		/**
+		 * Create a new NotConnectedException for the specified pair of points.
+		 * 
+		 * @param origin the origin of the non-existent path
+		 * @param destination the destination of the non-existent path
+		 */
+		public NotConnectedException(Point2D origin, Point2D destination) {
+			super("No path found from " + pointToString(origin) + " to " + pointToString(destination) + ".");
+			this.origin = origin;
+			this.destination = destination;
+		}
+
+		/**
+		 * Returns a string representation of a given point.
+		 * 
+		 * @param point a point in two-dimensional space
+		 * @return a string representation of the point
+		 */
+		private static String pointToString(Point2D point) {
+			return "(" + point.getX() + ", " + point.getY() + ")";
+		}
 	}
 
 }
