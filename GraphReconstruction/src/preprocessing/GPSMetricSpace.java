@@ -3,6 +3,7 @@ package preprocessing;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -41,7 +42,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 	 * @return the set of coordinates
 	 * @throws IOException if an error occurs while reading the GPS trace file
 	 */
-	private Set<Point2D> parse(String filename) throws IOException {
+	public Set<Point2D> parse(String filename) throws IOException {
 
 		Set<Point2D> coordinates = new HashSet<Point2D>();
 
@@ -118,54 +119,126 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		return coordinates;
 	}
 
+	
+	
 	private Set<Point2D> getEpsilonNet(Set<Point2D> coordinates, double epsilon) {
-		// TODO: implement this method (using reducePs code?)
-		return null;
-	}
-
-	private Set<Point2D> reducePs(Set<Point2D> coordinates, int parts) {
-
-		// divide the coordinate system into parts*parts pieces
-
-		Point2D[][] reducedPoints = new Point2D[parts][parts];
-
-		Set<Point2D> copyOfCoordinates = new HashSet<Point2D>();
-		copyOfCoordinates = coordinates;
-
-		Set<Point2D> returnSet = new HashSet<Point2D>();
-
-		for (int i = 0; i < parts; i++) {
-			for (int j = 0; j < parts; j++) {
-				while (copyOfCoordinates.iterator().hasNext()) {
-					Point2D point = copyOfCoordinates.iterator().next();
-					if (point.getX() < (copyOfCoordinates.size() / parts) * i) {
-						if (point.getY() < (copyOfCoordinates.size() / parts)
-								* j) {
-							if (reducedPoints[i][j] != null) {
-								reducedPoints[i][j] = point;
-							} else {
-								double x, y;
-								x = (reducedPoints[i][j].getX() + point.getX()) / 2;
-								y = (reducedPoints[i][j].getY() + point.getY()) / 2;
-								reducedPoints[i][j].setLocation(x, y);
-
-							}
+		
+		
+		ArrayList<Point2D> coordinatesCopy = new ArrayList<Point2D>();
+		ArrayList<LinkedList<Point2D>> eNet = new ArrayList<LinkedList<Point2D>>();
+		
+		Set<Point2D> result = new HashSet<Point2D>();
+		
+		
+		double cell = epsilon;
+		
+		// for better iteration -> copy coordinates in ArrayList
+		while (coordinates.iterator().hasNext()){
+			coordinatesCopy.add(coordinates.iterator().next());
+		}
+		
+		
+		// max and mix -> needed for eNet borders
+		// Initialize min, max with first point of array
+		double minX =coordinatesCopy.get(0).getX();
+		double maxX=coordinatesCopy.get(0).getX();
+		double minY=coordinatesCopy.get(0).getY();
+		double maxY=coordinatesCopy.get(0).getY();
+		
+		
+		// find min, max
+		
+		for (int i=0; i<coordinatesCopy.size();i++){
+			double tempX = coordinatesCopy.get(i).getX();
+			double tempY = coordinatesCopy.get(i).getY();
+			
+			if ( tempX < minX){
+				minX = tempX;
+				
+			}else if(tempX>maxX){
+				maxX = tempX;
+				
+			}
+			if(tempY<minY){
+				minY=tempY;
+			}else if(tempY>maxY){
+				maxY=tempY;
+			}
+				
+		}
+		
+		/* iterate through the net and select the points for each cell
+		 the points of each cell will be stored in a linkedlist...
+		every linkedlist will be stored in a ArrayList
+		*/
+		
+				
+		
+		for (double l=minX;l<maxX;l=l+epsilon){  // X-axis
+					
+			
+			
+			for (double k=minY;k<maxY;k=k+epsilon){ // Y-axis
+				
+				
+				LinkedList<Point2D> temp = new LinkedList<Point2D>();
+				
+				for (int m=0;m<coordinatesCopy.size();m++){
+					
+					if (l<coordinatesCopy.get(m).getX() && 	(l+cell)>coordinatesCopy.get(m).getX()){
+						
+						if (k<coordinatesCopy.get(m).getY() && 	(k+cell)>coordinatesCopy.get(m).getX()){
+							
+							temp.add(coordinatesCopy.get(m));
 						}
 					}
-				}
+				eNet.add(temp);
+			
 			}
-
-			System.out.println(reducedPoints.toString());
-
-			for (int k = 0; k < parts; k++) {
-				for (int l = 0; l < parts; l++) {
-					if (reducedPoints[k][l] != null) {
-						returnSet.add(reducedPoints[k][l]);
-					}
-				}
-			}
+			
+		
+		  }
+			
 		}
-
-		return returnSet;
+		
+		// find the average point of each cell and put him into the result (return) set
+		
+		for (int i=0;i<eNet.size();i++){
+			result.add(averagePoint(eNet.get(i)));
+		}
+		
+		
+		
+		
+		return result;
 	}
+
+	// Method to get the average Point of a Cell in the eNet
+	
+	private static Point2D averagePoint(LinkedList<Point2D> test){
+		  
+		  double gesamtX=0;
+		  double gesamtY=0;
+		  double elemente=test.size();
+		  
+		  Point2D point = new Point2D.Double();
+		  
+		  for (int i=0; i<test.size();i++){
+			  double tempX = test.get(i).getX();
+			  double tempY = test.get(i).getY();
+			  
+			  gesamtX = gesamtX+tempX;
+			  gesamtY = gesamtY+tempY;
+		  }
+		  
+		  double pointX= gesamtX/elemente;
+		  double pointY= gesamtY/elemente;
+		  
+		  point.setLocation(pointX, pointY);
+		  return (point);
+	  }
+	
+	
+	
+	
 }
