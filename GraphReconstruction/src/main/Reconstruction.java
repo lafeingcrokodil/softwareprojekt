@@ -9,7 +9,7 @@ public class Reconstruction<P> {
 	private MetricSpaceImplemented<P> workspace;
 	private MetricSpaceImplemented<P> emptyspace;
 	private double radius;
-	private Graph<P> returngraph;
+	private MetricGraph<P> returngraph;
 
 	Reconstruction(MetricSpace<P> space, double r) {
 		this.inputSpace = space;
@@ -88,7 +88,7 @@ public class Reconstruction<P> {
 		this.returngraph = createGraphwithDiameter(graph);
 	}
 
-	private Graph<P> createGraphwithDiameter(ReconstructedSimpleGraph<LinkedList<P>> graph) {
+	private MetricGraph<P> createGraphwithDiameter(ReconstructedSimpleGraph<LinkedList<P>> graph) {
 		
 		List<LinkedList<P>> nodes = graph.getAllNodes();
 		Iterator<LinkedList<P>> iter3 = nodes.iterator();
@@ -206,7 +206,7 @@ public class Reconstruction<P> {
 		return node1 && node2;
 	}
 
-	public Graph<P> get_graph() {
+	public MetricGraph<P> get_graph() {
 		return this.returngraph;
 	}
 

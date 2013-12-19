@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <V> Should contain the component that describes an edge or branch. probably RVPair<> 
  */
-public class ReconstructedSimpleGraph<V> implements Graph<V> {
+public class ReconstructedSimpleGraph<V> implements MetricGraph<V> {
 	private HashMap <V,LinkedList<V>> knoten; //<Knoten, Adjazenzliste>
 	private HashMap <V,Integer> knotentoint; //<Knoten, label>
 	private Integer knotenCount = 0; //aktuelle anzahl der Knoten

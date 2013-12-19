@@ -96,7 +96,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 
 	/**
 	 * Calculates all shortest path distances between vertices of this graph and
-	 * stores the results in a distance map. Implemented using the Floyd–Warshall
+	 * stores the results in a distance map. Implemented using the Floyd-Warshall
 	 * dynamic programming algorithm.
 	 */
 	private void calculateAllDistances() {
