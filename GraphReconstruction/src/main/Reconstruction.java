@@ -95,7 +95,7 @@ public class Reconstruction<P> {
 
 		while (iter3.hasNext()) {
 			LinkedList<P> punkt = iter3.next();
-			List<LinkedList<P>> nachbarn = graph.getNeighbours(punkt);
+			List<LinkedList<P>> nachbarn = graph.getNeighbours_old(punkt);
 			Iterator<LinkedList<P>> iter4 = nachbarn.iterator();
 			while (iter4.hasNext()) {
 				LinkedList<P> punkt2 = iter4.next();

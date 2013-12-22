@@ -1,9 +1,11 @@
 package main;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 /**
  * Simple Graph, does not Support multiple edgdes between two Nodes
  *  
@@ -34,11 +36,41 @@ public class ReconstructedSimpleGraph<V> implements MetricGraph<V> {
 		}
 	}
 	
+	
+	/**
+	 * An edge adjacent to some node x in the graph. Since x is known
+	 * already, it is enough to specify the node y that is at the
+	 * other end of the edge. This node y is stored in the
+	 * <code>neighbour</code> field.
+	 *
+	 * @param <V> the type of nodes in the graph
+	 */
+	
+	
+	/**
+	 * 
+	 */
 	public Iterator<V> iterator() {
 		return knoten.keySet().iterator();
 	}
-
-	public List<V> getNeighbours(V node) {
+	/**
+	 * Returns all edges adjacent to the specified node.
+	 * 
+	 * @param node a node in the graph
+	 * @return all edges adjacent to the specified node
+	 */
+	
+	public List<Edge<V>> getNeighbours(V node) {
+		List<V> nachbarn = this.getNeighbours_old(node);
+		List<Edge<V>> result = new LinkedList<Edge<V>>();
+		for (int i = 0; i < nachbarn.size(); i++){
+			V nachnode = nachbarn.get(i);
+			Edge<V> temp = new Edge<V>( nachnode,this.getDistance(node, nachnode));
+			result.add(temp);
+		}
+		return result;
+	}
+	public List<V> getNeighbours_old(V node) {
 		
 		if (this.knoten.containsKey(node)){
 			int zahl = this.knotentoint.get(node);
@@ -130,5 +162,88 @@ public class ReconstructedSimpleGraph<V> implements MetricGraph<V> {
 		LinkedList<V> temp1 = new LinkedList<V>();
 		temp1.addAll(this.knoten.keySet());
 		return temp1;
+	}
+
+	public double distance(V a, V b) {
+		return this.getDistance(a, b);
+	}
+
+	public boolean add(V arg0) {
+		boolean result = false;
+		try {
+			this.setNode(arg0);
+		} catch (Exception e) {
+			result = false;
+		}finally{
+			result = true;
+		}
+		return result;
+		
+	}
+
+	public boolean addAll(Collection<? extends V> arg0) {
+	 Iterator<? extends V> iter = arg0.iterator();
+
+		while (iter.hasNext()) {
+			V temp = iter.next();
+			this.add(temp);
+		}
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean contains(Object arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isEmpty() {
+		return this.knotenCount>0;
+	}
+
+	@Override
+	public boolean remove(Object arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public int size() {
+		return this.knotenCount;
+	}
+
+	@Override
+	public Object[] toArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T[] toArray(T[] arg0) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
