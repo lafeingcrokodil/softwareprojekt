@@ -85,8 +85,8 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		 * signalSymbols and turns the coordinates into Integers
 		 */
 		StringTokenizer tokenizer = new StringTokenizer(s2);
-		LinkedList<Integer> coordX = new LinkedList<Integer>();
-		LinkedList<Integer> coordY = new LinkedList<Integer>();
+		LinkedList<Double> coordX = new LinkedList<Double>();
+		LinkedList<Double> coordY = new LinkedList<Double>();
 
 		while (tokenizer.hasMoreTokens()) {
 
@@ -95,14 +95,14 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			if (write2.contains("!")) {
 
 				write2 = write2.replace("!", "");
-				write2 = write2.replace(".", "");
-				coordX.add(Integer.parseInt(write2));
+				
+				coordX.add(Double.parseDouble(write2));
 			}
 			if (write2.contains("#")) {
 
 				write2 = write2.replace("#", "");
-				write2 = write2.replace(".", "");
-				coordY.add(Integer.parseInt(write2));
+				
+				coordY.add(Double.parseDouble(write2));
 			}
 		}
 
@@ -121,7 +121,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 
 	
 	
-	private Set<Point2D> getEpsilonNet(Set<Point2D> coordinates, double epsilon) {
+	public Set<Point2D> getEpsilonNet(Set<Point2D> coordinates, double epsilon) {
 		
 		
 		ArrayList<Point2D> coordinatesCopy = new ArrayList<Point2D>();
@@ -129,21 +129,29 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		
 		Set<Point2D> result = new HashSet<Point2D>();
 		
-		
+				
 		double cell = epsilon;
 		
+		
 		// for better iteration -> copy coordinates in ArrayList
-		while (coordinates.iterator().hasNext()){
-			coordinatesCopy.add(coordinates.iterator().next());
+		
+		int p=0;
+		
+		for (Point2D i : coordinates){
+		
+			coordinatesCopy.add(i);
+			
+			
 		}
 		
-		
+				
 		// max and mix -> needed for eNet borders
 		// Initialize min, max with first point of array
 		double minX =coordinatesCopy.get(0).getX();
 		double maxX=coordinatesCopy.get(0).getX();
 		double minY=coordinatesCopy.get(0).getY();
 		double maxY=coordinatesCopy.get(0).getY();
+		
 		
 		
 		// find min, max
@@ -166,11 +174,12 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			}
 				
 		}
-		
+				
 		/* iterate through the net and select the points for each cell
 		 the points of each cell will be stored in a linkedlist...
 		every linkedlist will be stored in a ArrayList
 		*/
+		
 		
 				
 		
@@ -206,7 +215,6 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		for (int i=0;i<eNet.size();i++){
 			result.add(averagePoint(eNet.get(i)));
 		}
-		
 		
 		
 		
