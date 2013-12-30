@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import preprocessing.Logger.Level;
 import main.MetricGraph;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -35,6 +36,8 @@ import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<Point2D>{
 
 	private static final long serialVersionUID = -6029923560094150514L;
+
+	protected Logger log = new Logger(Level.DEBUG);
 
 	/**
 	 * A map storing the adjacencies between vertices in this graph.
@@ -68,15 +71,19 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 */
 	public void setVertices(Set<Point2D> points) {
 		clear();        // remove any vertices that were previously added to this graph
+
+		log.debug("Adding vertices to graph...");
 		addAll(points); // add all specified points to the set of vertices
 
 		// calculate the Delaunay triangulation of the point set
+		log.debug("Triangulating the point set...");
 		DelaunayTriangulationBuilder triangulator = new DelaunayTriangulationBuilder();
 		triangulator.setSites(toCoordinateSet(points));
 		// ASSUMPTION getEdges() always returns a MultiLineString (as claimed in documentation)
 		MultiLineString edges = (MultiLineString) triangulator.getEdges(new GeometryFactory());
 
 		// add edges of the triangulation to this graph
+		log.debug("Adding edges of triangulation to graph...");
 		for (int i = 0; i < edges.getNumGeometries(); i++) { // loop over edges
 			Coordinate[] coordinates = edges.getGeometryN(i).getCoordinates();
 			// ASSUMPTION each edge has exactly two vertices
@@ -91,7 +98,9 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 		}
 
 		// calculate the shortest path distances between the vertices of the graph
+		log.debug("Calculating shortest path distances...");
 		calculateAllDistances();
+		log.debug("Finished calculating distances.");
 	}
 
 	/**
@@ -101,6 +110,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 */
 	private void calculateAllDistances() {
 		// initialization (only direct paths allowed)
+		log.debug("Initializing distances...");
 		for (Point2D vertex : this) {
 			Map<Point2D, Double> newMap = new HashMap<>();
 			newMap.put(vertex, 0.0); // d(v,v) = 0
@@ -111,7 +121,12 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 		}
 
 		// recursive step (intermediate vertices introduced one by one)
+		log.debug("Recursive step of Floyd-Warshall algorithm:");
+		int count = 0;
+		int total = this.size();
 		for (Point2D via : this) {			// iterate over possible intermediate vertices
+			if ((++count) % 10 == 0)
+				log.debug(count + " of " + total);
 			for (Point2D from : this) {		// path starts at this vertex
 				for (Point2D to : this) {	// path ends at this vertex
 					try {
@@ -139,6 +154,8 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 
 	@Override
 	public List<Edge<Point2D>> getNeighbours(Point2D vertex) {
+		if (!adjacencyLists.containsKey(vertex))
+			adjacencyLists.put(vertex, new ArrayList<Edge<Point2D>>());
 		return adjacencyLists.get(vertex);
 	}
 

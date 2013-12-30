@@ -44,6 +44,8 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 	 */
 	public Set<Point2D> parse(String filename) throws IOException {
 
+		log.debug("Extracting GPS coordinates from trace file...");
+
 		Set<Point2D> coordinates = new HashSet<Point2D>();
 
 		// read the GPS trace file
@@ -135,6 +137,8 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		
 		// for better iteration -> copy coordinates in ArrayList
 		
+		log.debug("Copying coordinates into ArrayList...");
+		
 		int p=0;
 		
 		for (Point2D i : coordinates){
@@ -144,7 +148,8 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			
 		}
 		
-				
+		log.debug("Finding min/max coordinates...");
+		
 		// max and mix -> needed for eNet borders
 		// Initialize min, max with first point of array
 		double minX =coordinatesCopy.get(0).getX();
@@ -180,8 +185,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		every linkedlist will be stored in a ArrayList
 		*/
 		
-		
-				
+		log.debug("Grouping points by grid cell...");
 		
 		for (double l=minX;l<maxX;l=l+epsilon){  // X-axis
 					
@@ -219,8 +223,12 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		
 		// find the average point of each cell and put him into the result (return) set
 		
+		log.debug("Calculating representative for each occupied grid cell...");
+		log.debug("Epsilon net size: " + eNet.size());
+		
 		for (int i=0;i<eNet.size();i++){
-			
+			if (i % 10000 == 0)
+				log.debug(i + " of " + eNet.size());
 			result.add(averagePoint(eNet.get(i)));
 		}
 		

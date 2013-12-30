@@ -49,6 +49,7 @@ public class ImageMetricSpace extends NeighbourhoodGraph {
 	 * @return the set of extracted pixel coordinates
 	 */
 	private Set<Point2D> extractPixels(BufferedImage image, Color colour) {
+		log.debug("Extracting black pixel coordinates from image...");
 		Set<Point2D> coordinates = new HashSet<Point2D>();
 		Point topLeft = new Point(image.getMinX(), image.getMinY());
 		Point bottomRight = new Point(topLeft.x + image.getWidth(), topLeft.y + image.getHeight());
