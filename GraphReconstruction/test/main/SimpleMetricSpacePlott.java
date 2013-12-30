@@ -37,6 +37,8 @@ public class SimpleMetricSpacePlott<P> {
 	static double maxlength = 0.0;
 	P ursprung = null;
 	P referenz = null;
+	int counter = 0;
+	LinkedList<Tupel<P,Color>> storage;
 	static double maxdist = 0.0;
 	static String name;
 	double referenzx, referenzy, drehungx, drehungy;
@@ -47,20 +49,37 @@ public class SimpleMetricSpacePlott<P> {
 		this.space = s;
 		name = title;
 		punkte = new LinkedList<Tripel<Double, Double, Color>>();
-		translate(Color.BLACK);
+		storage = new LinkedList<Tupel<P,Color>>();
+		Iterator<P> iter = s.iterator();
+		while (iter.hasNext()) {
+			P temp1 = iter.next();
+			counter++;
+			System.out.println("punkte: " + counter);
+			storage.add(new Tupel<P,Color>(temp1,Color.BLACK));
+		}
+		//translate(Color.BLACK);
 	}
 	SimpleMetricSpacePlott(MetricSpace<P> s, String title, Color farbe) {
 		this.space = s;
+		storage = new LinkedList<Tupel<P,Color>>();
 		name = title;
 		punkte = new LinkedList<Tripel<Double, Double, Color>>();
-		translate(farbe);
+		Iterator<P> iter = s.iterator();
+		while (iter.hasNext()) {
+			P temp1 = iter.next();
+			counter++;
+			System.out.println("punkte: " + counter);
+			storage.add(new Tupel<P,Color>(temp1,farbe));
+		}
+		//translate(farbe);
 	}
 	SimpleMetricSpacePlott(String title) {
 		this.space =null;
+		storage = new LinkedList<Tupel<P,Color>>();
 		name = title;
 		punkte = new LinkedList<Tripel<Double, Double, Color>>();
 	}
-	
+	/*
 	public void add(MetricSpace<P> s, Color farbe) {
 		if (this.space==null){
 			this.space = s;
@@ -73,16 +92,40 @@ public class SimpleMetricSpacePlott<P> {
 		}
 		this.translate(farbe);
 	}
-
-	private void translate(Color farbe) {
-		Iterator<P> iter = space.iterator();
-		LinkedList<P> storage = new LinkedList<P>();
-		while (iter.hasNext()) {
-			P temp1 = iter.next();
-			storage.add(temp1);
+*/
+	public void add(MetricSpace<P> s, Color farbe) {
+		if (this.space==null){
+			this.space = s;
+			Iterator<P> iter = s.iterator();
+			while (iter.hasNext()) {
+				P temp1 = iter.next();
+				storage.add(new Tupel<P,Color>(temp1,farbe));
+			//	counter++;
+				//System.out.println(temp1.toString() + " punkte: " + counter);
+			}
 		}
+		else {
+			Iterator<P> iter = s.iterator();
+			while (iter.hasNext()) {
+				P temp1 = iter.next();
+			if(!this.space.contains(temp1)){
+				//	counter++;
+					//System.out.println(temp1.toString() + " punkte: " + counter);
+					this.storage.add(new Tupel<P,Color>(temp1,farbe));
+				}else{
+				//	counter++;
+				//	System.out.println("Rejected, punkte: " + counter);
+				}
+			}
+		}
+		//this.translate(farbe);
+	}
+	private void translate(){//Color farbe) {
+		
 		while (!storage.isEmpty()){
-			P temp = storage.removeFirst();
+			Tupel<P, Color> temptup =  storage.removeFirst();
+			P temp = temptup.getFirst();
+			Color farbe = temptup.getSecond();
 			// in liste um, wenn cord gleich weiter bis ende, dann zurück, liste abarbeiten.
 			if (ursprung != null && referenz != null && drehung != null) { // (x,y)
 				// Hier sind noch probleme, ein paar Punkte "verschwinden" hier
@@ -186,18 +229,18 @@ public class SimpleMetricSpacePlott<P> {
 				int b = schnitt2.getFirst().intValue();
 				int c = schnitt.getSecond().intValue();
 				int d = schnitt2.getSecond().intValue();
-				System.out.println(a);
-				System.out.println(b);
-				System.out.println(c);
-				System.out.println(d);
+			//	System.out.println(a);
+			//	System.out.println(b);
+			//	System.out.println(c);
+			//	System.out.println(d);
 
 				
 				
 				if (a==b && c== d){
-					punkte.remove(1);
-					System.out.println("tah");
+					Tripel<Double, Double, Color> z = punkte.remove(1);
+				//	System.out.println("tah");
 
-					storage.add(referenz);
+					storage.add(new Tupel<P,Color> (referenz,z.getThird()));
 					referenz = temp;
 					referenzx = space.distance(ursprung, referenz);
 					maxdist = space.distance(ursprung, referenz);
@@ -209,8 +252,8 @@ public class SimpleMetricSpacePlott<P> {
 					}
 					drehung = temp;
 					punkte.add(new Tripel<Double, Double, Color> (schnitt,farbe));
-					System.out.println(schnitt.print());
-					System.out.println(schnitt2.print());
+				//	System.out.println(schnitt.print());
+				//	System.out.println(schnitt2.print());
 
 				}
 				
@@ -230,8 +273,12 @@ public class SimpleMetricSpacePlott<P> {
 		}
 		
 	}
-
-	public static void start() {
+	public void start(){
+		translate();
+		start2();
+	}
+	public static void start2() {
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				createAndShowGUI();
@@ -269,7 +316,7 @@ class Plotter2 extends JPanel {
 
 	public Plotter2(Rectangle a, LinkedList<Tripel<Double, Double, Color>> points,
 			Double ref) {
-		this.refactor =  ref;
+		this.refactor = ref;
 		this.dimx = new Double(a.width).intValue();
 		this.dimy = new Double(a.height).intValue();
 		point = points;
@@ -290,15 +337,15 @@ class Plotter2 extends JPanel {
 		Iterator<Tripel<Double, Double, Color>> iter = point.iterator();
 		while (iter.hasNext()) {
 			Tripel<Double, Double, Color> p = iter.next();
-			System.out.println("Zeichne Punkt: "
-					+ Integer.toString(p.getFirst().intValue()) + " "
-					+ Integer.toString(p.getSecond().intValue()));
+		//	System.out.println("Zeichne Punkt: "
+	//				+ Integer.toString(p.getFirst().intValue()) + " "
+		//			+ Integer.toString(p.getSecond().intValue()));
 			g.setColor(p.getThird());
 			g.drawString("x", new Double(p.getFirst() * refactor).intValue()
 					+ dimx / 2, new Double(p.getSecond() * refactor).intValue()
 					+ dimy / 2);
 		}
-		System.out.println("--------------------------");
+	//	System.out.println("--------------------------");
 
 	}
 }
