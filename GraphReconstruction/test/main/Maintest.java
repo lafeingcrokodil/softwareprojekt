@@ -7,6 +7,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import preprocessing.ImageMetricSpace;
 import main.MetricSpace;
 import main.SimpleMetricSpacePlott;
 
@@ -18,6 +19,8 @@ public class Maintest {
     static String bild = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\mediumTest.png";
     static String bild2 = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\mediumTest2.png";
     static String cluster = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\cluster.png";
+    private static String cube = "images/cubeTest.png";
+    private static String reconstr = "images/reconstr.png";
     public static void main(String[] args) throws IOException {
     	//plottertest();
     	//reconstructiontest();
@@ -30,7 +33,7 @@ public class Maintest {
     	farben.add(Color.GREEN);
     	farben.add(Color.MAGENTA);
     	farben.add(Color.ORANGE);
-    	MetricSpace<Point2D> space = new Simpleimagespace(cluster);
+    	MetricSpace<Point2D> space = new ImageMetricSpace(cube, 1);
     	SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>("test");
     //	test.add(space, Color.BLACK);
     	
@@ -75,7 +78,7 @@ public class Maintest {
     			double r = 1.0;
     			Reconstruction<Point2D> rec = new Reconstruction<Point2D>(space,r);
     			SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>("test");
-    			MetricGraph<LinkedList<Point2D>> a = rec.get_graph();
+    			MetricGraph<Point2D> a = rec.get_graph();
     			//test.add(a, Color.BLACK);
     		//	test.start();
     			//SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>(space,"test", Color.BLUE);
