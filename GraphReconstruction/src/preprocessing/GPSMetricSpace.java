@@ -200,24 +200,31 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 							
 							temp.add(coordinatesCopy.get(m));
 						}
+					}else{
+						continue;
 					}
-				eNet.add(temp);
+				
+				
 			
 			}
-			
+				
+				if(temp.size()>0){
+					eNet.add(temp);
+				}
 		
 		  }
 			
 		}
 		
+		
 		// find the average point of each cell and put him into the result (return) set
 		
 		for (int i=0;i<eNet.size();i++){
+			
 			result.add(averagePoint(eNet.get(i)));
 		}
 		
-		
-		
+			
 		return result;
 	}
 
