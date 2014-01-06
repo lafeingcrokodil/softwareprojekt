@@ -6,16 +6,37 @@ import java.util.LinkedList;
  
 public class RipsVietoris<E>{
 	private LinkedList<LinkedList<E>> components;
-
-	RipsVietoris(MetricSpace<E> space, double radius){
+	private LinkedList<E> storage;
+	private double radius;
+	MetricSpace<E> space;
+	
+	
+	RipsVietoris(MetricSpace<E> sp, double radiu){
+		this.space=sp;
 		components = new LinkedList<LinkedList<E>>();
-		LinkedList<E> storage = new LinkedList<E>();
+		storage = new LinkedList<E>();
+		this.radius=radiu;
 		Iterator<E> iter = space.iterator();
 		while (iter.hasNext()) {
 			E temp1 = iter.next();
 			storage.add(temp1);
 		}
-		
+		rieps();
+	}
+	RipsVietoris(MetricSpace<E> sp, double radiu, LinkedList<E> stor){
+		this.space=sp;
+		components = new LinkedList<LinkedList<E>>();
+		storage = new LinkedList<E>();
+		this.radius = radiu;
+		for (int i =0; i< stor.size(); i++){		
+				storage.add(stor.get(i));
+		}
+		rieps();
+	}
+	
+
+	
+	private void rieps(){
 		while (!storage.isEmpty()){
 			E punkt = storage.pollFirst();
 			LinkedList<E> sammler = new LinkedList<E>();

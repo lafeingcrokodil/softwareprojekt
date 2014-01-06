@@ -1,15 +1,18 @@
 package main;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 	/*
 	 * @param <P> the type of points in the metric space
 	 */
-public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace<P>{
+public class MetricSpaceImplemented<P> extends LinkedList<P> implements MetricSpace<P>{
 	/*
 	 * MetricSpaceImplemented instances for grouping labels
 	 */
-	MetricSpaceImplemented<P> edge;
-	MetricSpaceImplemented<P> prelBranch;
-	MetricSpaceImplemented<P> branch;
+	LinkedList<P> edge;
+	LinkedList<P> prelBranch;
+	LinkedList<P> branch;
 	/*
 	 * Variable for input space given in constructor
 	 */
@@ -17,54 +20,33 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	
 	
 	/*
-	 * Constructors
+	 * Constructor
 	 */
 	public MetricSpaceImplemented(MetricSpace<P> space) {
-		//TESTED: ok!
-		/*
-		 * receives space from preprocessing and turns it into a MetricSpaceImplemented
-		 */
 		this.inputSet = space;
-		this.addAll(space);
-		edge = new MetricSpaceImplemented<P>("noSpace");
-		prelBranch  = new MetricSpaceImplemented<P>("noSpace");
-		branch = new MetricSpaceImplemented<P>("noSpace");
-
-	}
-	public MetricSpaceImplemented() {
-		edge = new MetricSpaceImplemented<P>("noSpace");
-		prelBranch  = new MetricSpaceImplemented<P>("noSpace");
-		branch = new MetricSpaceImplemented<P>("noSpace");
-	}
-
-	public MetricSpaceImplemented(String noOtherSpace){
-		/*
-		 * Constructor that doesn't invoke another MetricSpaceImplemented-Constructor
-		 */
+		edge = new LinkedList<P>();
+		prelBranch= new LinkedList<P>();
+		branch= new LinkedList<P>();
+		Iterator<P> iter = space.iterator();
+		while (iter.hasNext()) {
+			P temp = iter.next();
+			this.add(temp);
+		}
 	}
 	
 	/*
 	 * Methods
 	 */
-	public MetricSpaceImplemented<P> pointsInRadius(P p, double r){
-		//TESTED: ok!
-		/* 
-		 * returns MetricSpaceImplemented composed of points within radius r
-		 * around point p (including p itself).
-		 */
-		MetricSpaceImplemented<P> inRadiusSpace = new MetricSpaceImplemented<P>();
-		for (P point : this) { 
-			if(distance(p,point) <= r){
-				inRadiusSpace.add(point);
+	public LinkedList<P> pointsInRadius(P zentrum, double radius_gr,double radius_kl){
+		LinkedList<P> inRadiusSpace = new LinkedList<P>();
+		for (int i = 0; i < this.size(); i++){
+			if (this.distance(zentrum, this.get(i)) <= radius_gr && this.distance(zentrum, this.get(i)) >= radius_kl){
+				inRadiusSpace.add(this.get(i));
 			}
 		}
 		return inRadiusSpace;
 	}
 	
-	/*
-	 * returns all points that are contained in space1 but not in space2 (difference quantity)
-	 * i.e.: order of input arguments is relevant!
-	 */
 	public MetricSpaceImplemented<P> differenceSet(MetricSpaceImplemented<P> space1, MetricSpaceImplemented<P> space2){
 		//TESTED: ok!
 		for(P point : space2){
@@ -72,22 +54,54 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 		}
 		return space1;
 	}
-	
+	MetricSpace<P> getMetric(){
+		return this.inputSet;
+	}
 	
 	public void labelAs(P p, int label){
-		//TESTED: ok!
 		/*
 		 * Label 1 = Preliminary Branch
 		 * Label 2 = Edge
 		 * Label 3 = Branch: relabeling: point must be removed from preliminary label-list
-		 * TODO: might be implemented more efficiently
 		 */
-		if(label == 1) prelBranch.add(p);
-		if(label == 2) edge.add(p);
+		if(prelBranch.contains(p)){
+			LinkedList<P> temp = new LinkedList<P>();
+			for (int i = 0; i < prelBranch.size();i++){
+				if (p != prelBranch.get(i)){
+					temp.add(prelBranch.get(i));
+				}
+			}
+			prelBranch = temp;
+		}
+		if(edge.contains(p)){
+			LinkedList<P> temp = new LinkedList<P>();
+			for (int i = 0; i < edge.size();i++){
+				if (p != edge.get(i)){
+					temp.add(edge.get(i));
+				}
+			}
+			edge = temp;
+		}
+		if(branch.contains(p)){
+			LinkedList<P> temp = new LinkedList<P>();
+			for (int i = 0; i < branch.size();i++){
+				if (p != branch.get(i)){
+					temp.add(branch.get(i));
+				}
+			}
+			branch = temp;
+		}
+		
+		if(label == 1){ prelBranch.add(p);
+		System.out.println("liste2 (1) " + prelBranch.size());
+}
+		if(label == 2){ edge.add(p);
+		System.out.println("liste2 (2) " + edge.size());
+
+		}
 		if(label == 3){
 			branch.add(p);
-			if(prelBranch.contains(p)) prelBranch.remove(p);
-			else edge.remove(p);
+    		System.out.println("liste2 (3) " + branch.size());
 		}
 	}
 	
@@ -98,12 +112,14 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 		 * as branch points. Calls pointsInRadius()- and labelAs()-method with label
 		 * 3 (= branch points)
 		 */
-		for(P point : pointsInRadius(p, r)){
-			labelAs(point, 3);
+		for (int i = 0; i < this.size(); i++){
+			if (this.distance(p, this.get(i)) <= r){
+				this.labelAs(p, 3);
+			}
 		}
 	}
 	
-	public MetricSpaceImplemented<P> getLabeledAs (int label){
+	public LinkedList<P> getLabeledAs (int label){
 		//TESTED: ok!
 		//TODO: Add exception?
 		if(label == 1) return prelBranch;

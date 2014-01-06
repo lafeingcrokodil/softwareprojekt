@@ -20,11 +20,12 @@ public class Maintest {
     static String bild2 = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\mediumTest2.png";
     static String cluster = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\cluster.png";
     private static String cube = "images/cubeTest.png";
+    static String graph1 = "test/main/graph1.png";
     private static String reconstr = "images/reconstr.png";
     public static void main(String[] args) throws IOException {
     	//plottertest();
-    	//reconstructiontest();
-    	riepsvitoristest();
+    	reconstructiontest();
+    	//riepsvitoristest();
 	}
     private static void riepsvitoristest() throws IOException {
     	LinkedList<Color> farben= new LinkedList<Color>();
@@ -74,13 +75,35 @@ public class Maintest {
     }
     public static void reconstructiontest() throws IOException{
     	//MetricSpace<Point2D> space = new ImageMetricSpace(bild,1.0); // welche werte fuer alpha
-    			MetricSpace<Point2D> space = new Simpleimagespace(bild); // standard image space geht nicht
-    			double r = 1.0;
+    			MetricSpace<Point2D> space = new Simpleimagespace(graph1); // standard image space geht nicht
+    			double r = 0.6;
     			Reconstruction<Point2D> rec = new Reconstruction<Point2D>(space,r);
     			SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>("test");
-    			MetricGraph<Point2D> a = rec.get_graph();
-    			//test.add(a, Color.BLACK);
-    		//	test.start();
+    			MetricSpaceImplemented<Point2D> u = rec.testreturn();
+    			LinkedList<Point2D> liste1 = u.getLabeledAs(3);
+    			LinkedList<Point2D> liste2 = u.getLabeledAs(2);
+    			MetricSpace<Point2D> temp1 = new Simpleimagespace();
+    			System.out.println("liste1 (3) " + liste1.size());
+	    		MetricSpace<Point2D> temp2 = new Simpleimagespace();
+	    		System.out.println("liste2 (2) " + liste2.size());
+	    		MetricSpace<Point2D> temp3 = new Simpleimagespace();
+    			for (int i = 0; i < u.size(); i++){
+    	    		
+    	    		Point2D punkt = u.get(i);
+    	    		if (liste1.contains(punkt)){
+    	    			temp1.add(punkt);
+    	    		}else if( liste2.contains(punkt)){
+    	    			temp2.add(punkt);
+    	    		}else {
+    	    			temp3.add(punkt);
+    	    		}
+    	    	}
+        	
+
+    		test.add(temp2, Color.RED);
+    		test.add(temp1, Color.CYAN);
+    		test.add(temp3, Color.BLACK);
+    		test.start();
     			//SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>(space,"test", Color.BLUE);
     		//	test.add(space2, Color.BLACK);
     		//	test.start();

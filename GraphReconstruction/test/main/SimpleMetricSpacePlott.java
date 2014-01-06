@@ -341,9 +341,16 @@ class Plotter2 extends JPanel {
 	//				+ Integer.toString(p.getFirst().intValue()) + " "
 		//			+ Integer.toString(p.getSecond().intValue()));
 			g.setColor(p.getThird());
+			if (p.getThird()== Color.CYAN){
+				g.fillOval(new Double(p.getFirst() * refactor).intValue()
+					+ dimx / 2-5, new Double(p.getSecond() * refactor).intValue()
+					+ dimy / 2-5, 10, 10);
+				
+			}else {
 			g.drawString("x", new Double(p.getFirst() * refactor).intValue()
 					+ dimx / 2, new Double(p.getSecond() * refactor).intValue()
 					+ dimy / 2);
+			}
 		}
 	//	System.out.println("--------------------------");
 
