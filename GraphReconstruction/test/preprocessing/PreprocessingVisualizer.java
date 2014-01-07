@@ -79,7 +79,7 @@ public class PreprocessingVisualizer {
 	}
 
 	public static void main(String[] args) throws IOException {
-		MetricGraph<Point2D> graph = getMetricGraph();
+		MetricGraph<Point2D> graph = getMetricGraph("HIKE");
 
 		// set up main panel (which contains the canvas)
 		final int PADDING = 10;
@@ -93,6 +93,21 @@ public class PreprocessingVisualizer {
 		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+	}
+
+	private static MetricGraph<Point2D> getMetricGraph(String name) throws IOException {
+		switch (name) {
+		case "WALK":
+			return new GPSMetricSpace("traces/20131229_1358_walk.gpx", 0.00005, 0.00005);
+		case "HIKE":
+			return new GPSMetricSpace("traces/kamenny_chodnik4OSM.gpx", 0.001, 0.001);
+		case "CUBE":
+			return new ImageMetricSpace("images/cubeTest.png", 1);
+		case "GRAPH":
+			return new ImageMetricSpace("images/graph.png", 5, 5);
+		default:
+			return getMetricGraph();
+		}
 	}
 
 	private static MetricGraph<Point2D> getMetricGraph() throws IOException {

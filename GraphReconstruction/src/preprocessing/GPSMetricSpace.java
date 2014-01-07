@@ -24,11 +24,11 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 	 * Constructs a metric space based on the raw GPS data in the specified file.
 	 * 
 	 * @param filename the name of the file containing the data
-	 * @param alpha the constant used in calculating the underlying alpha complex
 	 * @param epsilon the constant used in reducing the point set
+	 * @param alpha the constant used in calculating the underlying alpha complex
 	 * @throws IOException if an error occurs while reading the GPS trace file
 	 */
-	public GPSMetricSpace(String filename, double alpha, double epsilon) throws IOException {
+	public GPSMetricSpace(String filename, double epsilon, double alpha) throws IOException {
 		super(alpha);
 		Set<Point2D> allCoordinates = parse(filename);
 		setVertices(getEpsilonNet(allCoordinates, epsilon));
