@@ -46,7 +46,6 @@ public class RipsVietoris<E>{
 				E x = sammler.get(j);
 				int size = storage.size();
 				for (int i = 0; i < size ; i++){
-					// TODO: handle NotConnectedException (thrown by distance method)
 					if (space.distance(x, storage.get(i)) <= radius){
 						E y = storage.get(i);
 						sammler.add(y);
