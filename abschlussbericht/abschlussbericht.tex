@@ -1,0 +1,34 @@
+\documentclass[parskip=half,
+ fontsize=12pt, bibtotoc,
+ ngerman]
+ {article}
+%%Präambel
+\usepackage[utf8]{inputenc} 
+\usepackage[ngerman]{babel}
+\usepackage{libertine}
+\usepackage[T1]{fontenc}
+%\usepackage{geometry}
+\usepackage[bottom]{footmisc}
+\usepackage{setspace}
+\usepackage{anysize}
+%Bibliographie
+\usepackage{typearea}
+\usepackage{biblatex}
+\renewcommand{\postnotedelim}{\addcolon\addspace}
+%\usepackage[babel,german=guillemets]{csquotes}
+\DeclareFieldFormat{postnote}{#1}
+\bibliography{abschlussbericht}
+\author{Terese Haimberger, Lea Helmers, Jiang Hongliang, Mahmoud Kassem, Daniel Theus, Moritz Walter}
+\title{Softwareprojekt: Rekonstruktion metrischer Graphen}
+\date{}
+\usepackage[left=3cm,right=4cm,top=2cm,bottom=2cm]{geometry}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+\maketitle
+\onehalfspacing
+\section{Rekonstruktion metrischer Graphen: der Algorithmus}
+Im Rahmen des Softwareprojekts "`Anwendungen effizienter Algorithmen"' haben wir uns damit befasst, einen Algorithmus umzusetsen, der aus einer Punktmenge den zugrundeliegenden Graphen sowie dessen Metrik rekonstruiert. Dadurch soll Struktur in gro{\ss}e Mengen geometrischer Daten gebracht werden, was deren Analyse und Weiterverarbeitung erleichtert. Als Grundlage für unsere Arbeit diente uns das Paper von Aanjaneya et al. \cite{chenEa2012}, welches einen Algorithmus für die Rekonstruktion metrischer Graphen beschreibt und dessen Richtigkeit beweist.\newline
+\printbibliography
+
+\end{document}
