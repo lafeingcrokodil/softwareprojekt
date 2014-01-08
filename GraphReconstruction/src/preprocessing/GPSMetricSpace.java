@@ -56,7 +56,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		file.close();
 
 		String s1 = new String(data); // switch the byte array into a string
-
+		
 		// switch to signalSymbols (in front of the coordinates)
 		// and replace other symbols
 
@@ -90,34 +90,39 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		LinkedList<Double> coordX = new LinkedList<Double>();
 		LinkedList<Double> coordY = new LinkedList<Double>();
 
+		
 		while (tokenizer.hasMoreTokens()) {
-
+			
 			String write2 = (String) tokenizer.nextToken();
 
 			if (write2.contains("!")) {
-
+				
 				write2 = write2.replace("!", "");
 				
 				coordX.add(Double.parseDouble(write2));
 			}
 			if (write2.contains("#")) {
-
+				
 				write2 = write2.replace("#", "");
 				
 				coordY.add(Double.parseDouble(write2));
 			}
 		}
-
+		
 		// loop -> place them into the set
 
+		
+		
+		
+		
 		for (int i = 0; i < coordY.size(); i++) {
 			Point2D point = new Point2D.Double();
-			point.setLocation(coordX.poll(), coordY.poll());
+			point.setLocation(coordX.get(i), coordY.get(i));
 			coordinates.add(point);
-		}
+			}
 
 		// returns the set
-
+		log.debug("Number of Extracted Points: "+coordinates.size());
 		return coordinates;
 	}
 
@@ -139,7 +144,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		
 		log.debug("Copying coordinates into ArrayList...");
 		
-		int p=0;
+		
 		
 		for (Point2D i : coordinates){
 		
@@ -179,6 +184,8 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			}
 				
 		}
+		
+		
 				
 		/* iterate through the net and select the points for each cell
 		 the points of each cell will be stored in a linkedlist...
@@ -232,7 +239,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			result.add(averagePoint(eNet.get(i)));
 		}
 		
-			
+		log.debug("GetEpsilonNet Setsize Result: " + result.size());	
 		return result;
 	}
 
