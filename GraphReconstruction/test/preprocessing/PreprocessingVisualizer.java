@@ -38,7 +38,8 @@ public class PreprocessingVisualizer {
 		private void setScale() {
 			offsetX = Double.POSITIVE_INFINITY;
 			offsetY = Double.POSITIVE_INFINITY;
-			double maxX = 0, maxY = 0;
+			double maxX = Double.NEGATIVE_INFINITY;
+			double maxY = Double.NEGATIVE_INFINITY;
 			for (Point2D vertex : graph) {
 				if (vertex.getX() < offsetX)
 					offsetX = vertex.getX();
@@ -79,7 +80,7 @@ public class PreprocessingVisualizer {
 	}
 
 	public static void main(String[] args) throws IOException {
-		MetricGraph<Point2D> graph = getMetricGraph("HIKE");
+		MetricGraph<Point2D> graph = getMetricGraph("DOUBLE_LOOP");
 
 		// set up main panel (which contains the canvas)
 		final int PADDING = 10;
@@ -101,6 +102,12 @@ public class PreprocessingVisualizer {
 			return new GPSMetricSpace("traces/20131229_1358_walk.gpx", 0.00005, 0.00005);
 		case "HIKE":
 			return new GPSMetricSpace("traces/kamenny_chodnik4OSM.gpx", 0.001, 0.001);
+		case "LINE":
+			return new GPSMetricSpace("traces/Line_229Points.gpx", 0.0007, 0.0005);
+		case "LOOP":
+			return new GPSMetricSpace("traces/Loop_7214Points.gpx", 0.001, 0.001);
+		case "DOUBLE_LOOP":
+			return new GPSMetricSpace("traces/DoubleLoop_2959Points.gpx", 0.002, 0.002);
 		case "CUBE":
 			return new ImageMetricSpace("images/cubeTest.png", 1);
 		case "GRAPH":

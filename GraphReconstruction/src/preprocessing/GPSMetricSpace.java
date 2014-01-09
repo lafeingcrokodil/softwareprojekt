@@ -79,9 +79,6 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			s2 = s2.replace(y, "");
 		}
 
-		// String of all coordinates
-		s2 = s2.replace("-", "/");
-
 		/*
 		 * the tokenizer takes all out of the string s2, replaces the last
 		 * signalSymbols and turns the coordinates into Integers
