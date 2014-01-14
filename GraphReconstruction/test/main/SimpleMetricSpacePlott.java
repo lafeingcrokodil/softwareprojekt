@@ -43,6 +43,7 @@ public class SimpleMetricSpacePlott<P> {
 	static String name;
 	double referenzx, referenzy, drehungx, drehungy;
 	P drehung = null;
+	Tupel<Double,Double> drehungt;
 	static LinkedList<Tripel<Double, Double, Color>> punkte;
 
 	SimpleMetricSpacePlott(MetricSpace<P> s, String title) {
@@ -126,20 +127,51 @@ public class SimpleMetricSpacePlott<P> {
 			Tupel<P, Color> temptup =  storage.removeFirst();
 			P temp = temptup.getFirst();
 			Color farbe = temptup.getSecond();
-			// in liste um, wenn cord gleich weiter bis ende, dann zurück, liste abarbeiten.
 			if (ursprung != null && referenz != null && drehung != null) { // (x,y)
-				// Hier sind noch probleme, ein paar Punkte "verschwinden" hier
-				// bzw. bekommen die selben koordinaten.
-				// -> drehung muss richtig eingebracht werden.
-				/*
-				 * punktproblem korigiert, geht aber besser.
-				 */
+				// Restliche punkte festlegen in relation zu ursprung, referenz und drehung
 				Kreiscalc k = new Kreiscalc();
 				k.setKreis1(0.0, 0.0, space.distance(ursprung, temp));
 				k.setKreis2(referenzx, referenzy, space.distance(referenz, temp));
-				Tupel<Double, Double> schnitt = k.berechne_schnittp().getFirst();
-				Tupel<Double, Double> schnitt2 = k.berechne_schnittp().getLast();
-				boolean eins=false;
+
+				Tupel<Double, Double> x1 = k.berechne_schnittp().getFirst();
+				Tupel<Double, Double> x2 = k.berechne_schnittp().getLast();
+				
+				Double a = x1.getFirst();//.intValue();
+				Double c = x2.getFirst();//.intValue();
+				
+				Double b = x1.getSecond();//.intValue();
+				Double d = x2.getSecond();//.intValue();
+				
+				Double e = drehungt.getFirst();
+				Double f = drehungt.getSecond();
+				
+				double abstand = space.distance(drehung,temp);
+				
+				double vgl1 = Math.sqrt((a-e)*(a-e)+(b-f)*(b-f));
+				double vgl2 = Math.sqrt((c-e)*(c-e)+(d-f)*(d-f));
+				
+				if(  (Math.abs(abstand-vgl1))>(Math.abs(abstand-vgl2))){
+					if (maxdist < space.distance(ursprung, temp)) {
+						maxdist = space.distance(ursprung, temp);
+					}
+					punkte.add(new Tripel<Double, Double, Color> (x1,farbe));
+				}else {
+					if (maxdist < space.distance(ursprung, temp)) {
+						maxdist = space.distance(ursprung, temp);
+					}
+					punkte.add(new Tripel<Double, Double, Color> (x2,farbe));
+				}
+				
+				
+				
+	
+
+					
+					
+					
+					
+				
+				/*boolean eins=false;
 				boolean zwei=false;
 				Iterator<Tripel<Double, Double, Color>> iter5 = punkte.iterator();
 				while (iter5.hasNext()) {
@@ -186,39 +218,12 @@ public class SimpleMetricSpacePlott<P> {
 						maxdist = space.distance(ursprung, temp);
 					}
 					punkte.add(new Tripel<Double, Double, Color> (schnitt,farbe));
-				}
-				
-				/*
-				if (space.distance(ursprung, temp) < space.distance(drehung,
-						temp)
-						&& space.distance(referenz, temp) < space.distance(
-								drehung, temp)) {
-					// oberhalb
-					Kreiscalc k = new Kreiscalc();
-					k.setKreis1(0.0, 0.0, space.distance(ursprung, temp));
-					k.setKreis2(referenzx, referenzy,
-							space.distance(referenz, temp));
-					schnitt = k.berechne_schnittp()
-							.getFirst();
-					if (maxdist < space.distance(ursprung, temp)) {
-						maxdist = space.distance(ursprung, temp);
-					}
-					punkte.add(schnitt);
-				} else {
-					// unterhalb
-					Kreiscalc k = new Kreiscalc();
-					k.setKreis1(0.0, 0.0, space.distance(ursprung, temp));
-					k.setKreis2(referenzx, referenzy,
-							space.distance(referenz, temp));
-					schnitt = k.berechne_schnittp()
-							.getLast();
-					if (maxdist < space.distance(ursprung, temp)) {
-						maxdist = space.distance(ursprung, temp);
-					}
-					punkte.add(schnitt);
 				}*/
+				
+		
 			}
-			if (ursprung != null && referenz != null && drehung == null) { // (x,y)
+			if (ursprung != null && referenz != null && drehung == null) { // (x,y) 
+				// Schritt 3: Drehpunkt festlegen, darf nicht auf geraden mit ursprung und referenz liegen.
 				
 				Kreiscalc k = new Kreiscalc();
 				k.setKreis1(0.0, 0.0, space.distance(ursprung, temp));
@@ -229,17 +234,9 @@ public class SimpleMetricSpacePlott<P> {
 				int b = schnitt2.getFirst().intValue();
 				int c = schnitt.getSecond().intValue();
 				int d = schnitt2.getSecond().intValue();
-			//	System.out.println(a);
-			//	System.out.println(b);
-			//	System.out.println(c);
-			//	System.out.println(d);
-
-				
-				
+					
 				if (a==b && c== d){
 					Tripel<Double, Double, Color> z = punkte.remove(1);
-				//	System.out.println("tah");
-
 					storage.add(new Tupel<P,Color> (referenz,z.getThird()));
 					referenz = temp;
 					referenzx = space.distance(ursprung, referenz);
@@ -251,21 +248,19 @@ public class SimpleMetricSpacePlott<P> {
 						maxdist = space.distance(ursprung, temp);
 					}
 					drehung = temp;
+					drehungt = schnitt;
 					punkte.add(new Tripel<Double, Double, Color> (schnitt,farbe));
-				//	System.out.println(schnitt.print());
-				//	System.out.println(schnitt2.print());
-
 				}
 				
 			}
-			if (ursprung != null && referenz == null) { // (x,0)
+			if (ursprung != null && referenz == null) { // (x,0) // Schritt 2: Referenzpunkt festlegen
 				referenz = temp;
 				referenzx = space.distance(ursprung, referenz);
 				maxdist = space.distance(ursprung, referenz);
 				referenzy = 0.0;
 				punkte.add(new Tripel<Double, Double, Color> (referenzx, referenzy,farbe));
 			}
-			if (ursprung == null) { // (0/0)
+			if (ursprung == null) { // (0/0)  // Schritt 1: Nullpunkt bestimmen
 				ursprung = temp;
 				punkte.add(new Tripel<Double, Double, Color> (0.0, 0.0,farbe));
 			}

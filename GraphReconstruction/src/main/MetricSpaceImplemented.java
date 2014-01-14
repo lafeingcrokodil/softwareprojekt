@@ -93,15 +93,15 @@ public class MetricSpaceImplemented<P> extends LinkedList<P> implements MetricSp
 		}
 		
 		if(label == 1){ prelBranch.add(p);
-		System.out.println("liste2 (1) " + prelBranch.size());
+		//System.out.println("liste2 (1) " + prelBranch.size());
 }
 		if(label == 2){ edge.add(p);
-		System.out.println("liste2 (2) " + edge.size());
+		//System.out.println("liste2 (2) " + edge.size());
 
 		}
 		if(label == 3){
 			branch.add(p);
-    		System.out.println("liste2 (3) " + branch.size());
+    		//System.out.println("liste2 (3) " + branch.size());
 		}
 	}
 	

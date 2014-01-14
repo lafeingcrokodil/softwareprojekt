@@ -39,22 +39,22 @@ public class Reconstruction<P> {
 			P punkt = this.workspace.get(i);
 			LinkedList<P> space;
 			space = this.workspace.pointsInRadius(punkt, 5*this.radius/3, this.radius);
-			RipsVietoris<P> r = new RipsVietoris<P>(this.workspace.getMetric(), this.radius * 4 / 3, space);System.out.println("# 4");
+			RipsVietoris<P> r = new RipsVietoris<P>(this.workspace.getMetric(), this.radius * 4 / 3, space);//System.out.println("# 4");
 			//if (r.deg(punkt) == 2) {
-			System.out.println("Degree: " + punkt.toString()+ " -----" + r.deg());
-			if (r.deg() == 2) {System.out.println(" #5");
+		//	System.out.println("Degree: " + punkt.toString()+ " -----" + r.deg());
+			if (r.deg() == 2) {//System.out.println(" #5");
 				/*
 				 * label: Label 1 = Preliminary Branch Label 2 = Edge Label 3 =
 				 * Branch
 				 */
-				this.workspace.labelAs(punkt, 2); System.out.println("#6");
-			} else { System.out.println("#7");
-				this.workspace.labelAs(punkt, 1); System.out.println("#8");
-			} System.out.println("#9");
+				this.workspace.labelAs(punkt, 2); //System.out.println("#6");
+			} else { //System.out.println("#7");
+				this.workspace.labelAs(punkt, 1); //System.out.println("#8");
+			}// System.out.println("#9");
 
-		} System.out.println("#10");
+		}// System.out.println("#10");
 		LinkedList<P> temp = this.workspace.getLabeledAs(1);
-		System.out.println("#11");
+	//	System.out.println("#11");
 		/*while (temp.size()>0){
 			temp = this.workspace.getLabeledAs(1);
 			this.workspace.labelInRadius( temp.getFirst(), 2 * this.radius); 
@@ -63,13 +63,14 @@ public class Reconstruction<P> {
 			this.workspace.labelInRadius(temp.get(j), 2*this.radius);
 		}
 
-		 System.out.println("#12,#13");
+		// System.out.println("#12,#13");
 		LinkedList<P> edgepoints = this.workspace.getLabeledAs(2);
 		LinkedList<P> branchpoints = this.workspace.getLabeledAs(3);
 		
 		
 		//---------------- bis hierher getestet und funktionierend -----------------------
-		System.out.println(" #14 Reconstructing the Graph Structure");
+		System.out.println("#14 Reconstructing the Graph Structure");
+		System.out.println("this can take some time...");
 		RipsVietoris<P> kantenRips = new RipsVietoris<P>(this.workspace.getMetric(), this.radius * 2,edgepoints);// #15
 		RipsVietoris<P> eckenRips = new RipsVietoris<P>(this.workspace.getMetric(), this.radius * 2,branchpoints);
 		LinkedList<LinkedList<P>> kanten = kantenRips.getComponents(); // #16
@@ -113,17 +114,20 @@ public class Reconstruction<P> {
 			LinkedList<P> ecke = ecken.get(k);
 			result.setNode(ecke);
 		}
-		 System.out.println("kontroll 1");
+		// System.out.println("Reconstruktion laeuft...finde_kanten... 0%");
+		 
 		for (int k = 0; k < ecken.size()-1; k++) {
+			 System.out.println("Reconstruction laeuft...finde_kanten... "+ (k*100/ecken.size()) +"%");
 			for (int j = k+1; j < ecken.size(); j++) {
-				 System.out.println("Kontroll2: ");
+			//	 System.out.println("Kontroll2: ");
+				// System.out.println("Reconstruktion laeuft...finde_kanten... "+ ((k*100.0+j)/(ecken.size()*2)) +"%");
+
 				for (int l = 0; l < kanten.size(); l++) {
 					LinkedList<P> ecke1 = ecken.get(k);
 					LinkedList<P> ecke2 = ecken.get(j);
 					LinkedList<P> kante = kanten.get(l);
 					boolean e1 = false;
 					boolean e2 = false;
-					 System.out.println("Kontroll3: ");
 					for (int m =0; m <kante.size(); m++){
 						LinkedList<P> g = this.workspace.pointsInRadius(kante.get(m), this.radius*faktor, 0.1*this.radius);
 						for (int f = 0; f < g.size(); f++){

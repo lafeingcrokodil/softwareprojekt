@@ -75,8 +75,8 @@ public class Maintest {
     }
     public static void reconstructiontest() throws IOException{
     	//MetricSpace<Point2D> space = new ImageMetricSpace(bild,1.0); // welche werte fuer alpha
-    			MetricSpace<Point2D> space = new Simpleimagespace(graph1); // standard image space geht nicht
-    			double r = 0.6;
+    			MetricSpace<Point2D> space = new Simpleimagespace(cube); // standard image space geht nicht
+    			double r = 5.6;
     			Reconstruction<Point2D> rec = new Reconstruction<Point2D>(space,r);
     			SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>("test");
     			MetricSpaceImplemented<Point2D> u = rec.testreturn();
