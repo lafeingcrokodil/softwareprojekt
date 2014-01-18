@@ -4,7 +4,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1}Einleitung: Rekonstruktion metrischer Graphen}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2}Organisation und Umsetzung des Algorithmus in Java}{2}
+\contentsline {section}{\numberline {2}Organisation und Umsetzung des Algorithmus in Java}{3}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3}Arbeit in den einzelnen Gruppen}{3}
 \defcounter {refsection}{0}\relax 

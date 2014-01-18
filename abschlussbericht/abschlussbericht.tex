@@ -14,11 +14,13 @@
 %Bibliographie
 \usepackage{typearea}
 \usepackage{biblatex}
+\usepackage{amssymb}
+\usepackage{amsmath}
 \renewcommand{\postnotedelim}{\addcolon\addspace}
 %\usepackage[babel,german=guillemets]{csquotes}
 \DeclareFieldFormat{postnote}{#1}
 \bibliography{abschlussbericht}
-\author{Terese Haimberger, Lea Helmers, Jiang Hongliang, Mahmoud Kassem, Daniel Theus, Moritz Walter}
+\author{Terese Haimberger, Lea Helmers, Mahmoud Kassem, Daniel Theus, Moritz Walter}
 \title{Softwareprojekt: Rekonstruktion metrischer Graphen}
 \date{}
 \usepackage[left=3cm,right=4cm,top=2cm,bottom=2cm]{geometry}
@@ -31,9 +33,24 @@
 \onehalfspacing
 \section{Einleitung: Rekonstruktion metrischer Graphen}
 \subsection*{Motivation und Problemstellung}
-Im Rahmen des Softwareprojekts "`Anwendungen effizienter Algorithmen"' haben wir uns damit befasst, einen Algorithmus umzusetsen, der aus einer Punktmenge den zugrundeliegenden Graphen sowie dessen Metrik rekonstruiert. Dadurch soll Struktur in gro{\ss}e Mengen geometrischer Daten gebracht werden, was deren Analyse und Weiterverarbeitung erleichtert. Zu verarbeitende Daten können Netzwerke im weitesten Sinne sein, wie beispielsweise GPS-Daten, Strom- und Nachrichtennetze oder astrologische Daten. Häufig sind diese Daten gestört oder enthalten Ausreißer und sind zudem im Allgemeinen sehr umfangreich. Ziel des Algorithmus ist es, die Datenmenge kompakt durch ihre wichtigsten Verzweigungen darzustellen, wodurch sie auf ihre wichtigen Aspekte reduziert wird. So kann eine einfachere Visualisierung und die weitere Analyse und Verarbeitung der Daten ermöglicht werden.\newline
-Als Grundlage für unsere Arbeit diente uns ein Paper \cite{chenEa2012}, welches einen Algorithmus für die Rekonstruktion metrischer Graphen beschreibt und dessen Richtigkeit beweist. Die Eingabe besteht dabei aus einem metrischen Raum $\left(Y, d_y\right)$, der aus den Rohdaten konstruiert wird und dem ein metrischer Graph $\left(X, d_x\right)$ zugrundeliegt, den es zu rekonstruieren gilt. Ziel des Algorithmus ist es, diesen zugrundeliegenden Graphen durch einen metrischen Graphen $(\hat{X}, d_{\hat{x}})$ anzunähren und dabei weitestgehend die Abstände von $\left(X, d_x\right)$ in $(\hat{X}, d_{\hat{x}})$ beizubehalten. \newline
+Im Rahmen des Softwareprojekts "`Anwendungen effizienter Algorithmen"' haben wir uns damit befasst, einen Algorithmus umzusetsen, der aus einer Punktmenge den zugrundeliegenden Graphen sowie dessen Metrik rekonstruiert. Dadurch soll Struktur in gro{\ss}e Mengen geometrischer Daten gebracht werden, was deren Analyse und Weiterverarbeitung erleichtert. Zu verarbeitende Daten können Netzwerke im weitesten Sinne sein, wie beispielsweise GPS-Daten, Strom- und Nachrichtennetze oder astrologische Daten. Häufig sind diese Daten gestört oder enthalten Ausreißer und sind zudem im Allgemeinen sehr umfangreich. Ziel des Algorithmus ist es, die Datenmenge kompakt durch ihre wichtigsten Verzweigungen darzustellen, wodurch sie auf ihre wichtigen Aspekte reduziert wird. So kann eine einfachere Visualisierung und die weitere Analyse und Verarbeitung der Daten ermöglicht werden.
 \subsection*{Der Algorithmus}
+Als Grundlage für unsere Arbeit diente uns ein Paper \cite{chenEa2012}, welches einen Algorithmus für die Rekonstruktion metrischer Graphen beschreibt und dessen Richtigkeit beweist. Die Eingabe besteht dabei aus einem metrischen Raum $\left(Y, d_y\right)$, der aus den Rohdaten konstruiert wird und dem ein metrischer Graph $\left(X, d_x\right)$ zugrundeliegt, den es zu rekonstruieren gilt. Ziel des Algorithmus ist es, diesen zugrundeliegenden Graphen durch einen metrischen Graphen $(\hat{X}, d_{\hat{x}})$ anzunähren und dabei weitestgehend die Abstände von $\left(X, d_x\right)$ in $(\hat{X}, d_{\hat{x}})$ beizubehalten. Zusätzlich zu $\left(Y, d_y\right)$ wird auch ein Parameter $r$ übergeben, der in einigen Schritten des Algorithmus eine wichtige Rolle spielt. Die Erstellung des Graphen $(\hat{X}, d_{\hat{x}})$ wird nun wie folgt durchgeführt:\newline
+
+\begin{enumerate}
+\item \textbf{Kanten- und Knotenpunkte bestimmen}\newline
+Zunächst wird festgestellt, welche der in $\left(Y, d_y\right)$ enthaltenen Punkte in $(\hat{X}, d_{\hat{x}})$ zu einer Kante und welche zu einem Knoten gehören werden. Dafür wird um alle im Eingabegraphen enthaltenen Punkte ein Kreisring, dessen Grö{\ss}e abhängig vom Parameter $r$ ist, gelegt. Für die Punktmenge in diesem Kreisring wird der Rips-Vietoris-Graph erstellt. ERKLÄREN!!!!!!!!!!!!! AUCH HIER IST r WICHTIG!!!! Es wird dann der Grad des jeweiligen Knoten bestimmt, indem die Zusammenhangskomponenten des Rips-Vietoris-Graphen gezählt werden. Enthält der Kreisring um einen Knoten zwei Zusammenhangskomponenten, hat er Grad zwei und es handelt sich um einen Punkt, der im Graphen $(\hat{X}, d_{\hat{x}})$ zu einer Kante gehören wird und er erhält das Label \textit{edge point}. Andernfalls wird der Punkt zu einem Knoten gehören und wird daher als \textit{preliminary branch point} gekennzeichnet.
+Diese Markierung erhalten diese Punkte lediglich vorbreitend (\textit{preliminary}), da im Anschluss alle Punkte, die innerhalb eines Abstands von $2r$ von einem \textit{preliminary branch point} als \textit{branch point} gekennzeichnet werden, weshalb sich die Punkte in $\left(Y, d_y\right)$ nun in zwei Teilmengen $\mathbb{E}$ und $\mathbb{V}$ aufteilen lassen. In $\mathbb{E}$ sind dabei die \textit{edge points} enthalten und in $\mathbb{V}$ die \textit{branch points}.\newline
+PSEUDOCODE?\newline
+
+\item \textbf{Struktur des Graphen rekonstruieren}\newline
+Anschlie{\ss}end wird für die beiden Mengen $\mathbb{V}$ und $\mathbb{E}$ der Rips-Vietoris-Graph erstellt. Die entstehenden Zusammenhangskomponenten in $\mathbb{E}$ entsprechen dabei den Kanten und jene in $\mathbb{V}$ den Knoten im Graphen $(\hat{X}, d_{\hat{x}})$. Um dessen Struktur zu vervollständigen müssen nun lediglich noch die Verbindungen die Verbindungen zwischen Kanten und Knoten rekonstruiert werden. Dies geschieht, indem zwei Knoten aus  $\mathbb{V}$ genau dann durch eine Kante $e \in \mathbb{E}$ verbunden werden, wenn sie in ihrer Zusammenhangskomponente Punkte haben, die zu Punkten der Zusammenhangskomponente von $e$ einen kleineren Abstand als $2r$ haben.
+
+\item \textbf{Metrik rekonstruieren}\newline
+Schlussendlich müssen noch die Längen der Kanten bestimmt werden. Dafür wird jeder Kante in $\hat{X}$ als Länge der Durchmesser ihrer Zusammenhangskomponente zuzüglich $4r$ zugewiesen.
+\end{enumerate} 
+
+
 
 \section{Organisation und Umsetzung des Algorithmus in Java}
 Da allen Studenten im Team die objektorientierte Programmiersprache Java geläufig war und sie uns durchaus als geeignet für die Aufgabe schien, haben wir uns entschlossen, unser Programm darin zu schreiben. Für das Arbeiten an unserer Software haben wir uns in drei verschiedene Gruppen aufgeteilt. Die eine Gruppe hat sich mit der Vorverarbeitung der Rohdaten beschäftigt, im Wesentlichen also aus den Rohdaten den metrische Raum $\left(Y, d_y\right)$ für die Eingabe des Algorithmus konstruiert. Die zweite Gruppe hat sich mit der Implementierung des Algorithmus, genauer der Rekonstruktion von $(\hat{X}, d_{\hat{x}})$, in Java auseinandergesetzt, während die dritte für die Visualisierung des Graphen $(\hat{X}, d_{\hat{x}})$ zuständig war. Damit wir stets alle über die Arbeit unserer Teammitglieder informiert waren haben wir unsere Ergebnisse bei \url{github.com} gespeichert und stets aktualisiert. (GENAUER ERKLÄREN?) Um Aufgaben und den Stand der Arbeit daran für alle zugänglich zu dokumentieren haben wir zusätzlich \url{trello.com} genutzt, wo man ein virtuelles Notizbrett erstellen kann. (GENAUER ERKLÄREN!).\newline
