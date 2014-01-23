@@ -36,9 +36,7 @@ public class ImageMetricSpace extends NeighbourhoodGraph {
 	 * @throws IOException if an error occurs while reading the image
 	 */
 	public ImageMetricSpace(String filename, double alpha) throws IOException {
-		super(alpha);
-		BufferedImage image = ImageIO.read(new File(filename));
-		setVertices(extractPixels(image, Color.BLACK));
+		this(filename, 0, alpha, true);
 	}
 
 	/**
@@ -53,11 +51,32 @@ public class ImageMetricSpace extends NeighbourhoodGraph {
 	 * @throws IOException if an error occurs while reading the image
 	 */
 	public ImageMetricSpace(String filename, double epsilon, double alpha) throws IOException {
+		this(filename, epsilon, alpha, true);
+	}
+
+	/**
+	 * Creates a new ImageMetricSpace based on a representative subset of the
+	 * black pixels in the specified image file.
+	 * 
+	 * @param filename the name of the image file
+	 * @param epsilon the constant used in reducing the point set
+	 * @param alpha the constant used in calculating the underlying alpha complex
+	 * @param calculateDistances determines whether the distances should be calculated
+	 * @throws IOException if an error occurs while reading the image
+	 */
+	public ImageMetricSpace(String filename, double epsilon, double alpha, boolean calculateDistances) throws IOException {
 		super(alpha);
 		BufferedImage image = ImageIO.read(new File(filename));
-		Set<Point2D> allPixels = extractPixels(image, Color.BLACK);
-		Set<Point2D> epsilonNet = new EpsilonNet(allPixels, epsilon);
-		setVertices(epsilonNet);
+		Set<Point2D> pixels = extractPixels(image, Color.BLACK);
+		if (epsilon != 0)
+			pixels = new EpsilonNet(pixels, epsilon);
+		setVertices(pixels);
+		if (calculateDistances) {
+			// calculate the shortest path distances between the vertices of the graph
+			log.debug("Calculating shortest path distances...");
+			calculateAllDistances();
+			log.debug("Finished calculating distances.");
+		}
 	}
 
 	/**

@@ -96,11 +96,6 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 				addAdjacency(b, a, edgeLength);
 			}
 		}
-
-		// calculate the shortest path distances between the vertices of the graph
-		log.debug("Calculating shortest path distances...");
-		calculateAllDistances();
-		log.debug("Finished calculating distances.");
 	}
 
 	/**
@@ -108,7 +103,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 * stores the results in a distance map. Implemented using the Floyd-Warshall
 	 * dynamic programming algorithm.
 	 */
-	private void calculateAllDistances() {
+	public void calculateAllDistances() {
 		// initialization (only direct paths allowed)
 		log.debug("Initializing distances...");
 		for (Point2D vertex : this) {

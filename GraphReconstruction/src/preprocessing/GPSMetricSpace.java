@@ -29,9 +29,28 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 	 * @throws IOException if an error occurs while reading the GPS trace file
 	 */
 	public GPSMetricSpace(String filename, double epsilon, double alpha) throws IOException {
+		this(filename, epsilon, alpha, true);
+	}
+
+	/**
+	 * Constructs a metric space based on the raw GPS data in the specified file.
+	 * 
+	 * @param filename the name of the file containing the data
+	 * @param epsilon the constant used in reducing the point set
+	 * @param alpha the constant used in calculating the underlying alpha complex
+	 * @param calculateDistances determines whether the distances should be calculated
+	 * @throws IOException if an error occurs while reading the GPS trace file
+	 */
+	public GPSMetricSpace(String filename, double epsilon, double alpha, boolean calculateDistances) throws IOException {
 		super(alpha);
 		Set<Point2D> allCoordinates = parse(filename);
-		setVertices(getEpsilonNet(allCoordinates, epsilon));
+		setVertices(new EpsilonNet(allCoordinates, epsilon));
+		if (calculateDistances) {
+			// calculate the shortest path distances between the vertices of the graph
+			log.debug("Calculating shortest path distances...");
+			calculateAllDistances();
+			log.debug("Finished calculating distances.");
+		}
 	}
 
 	/**
