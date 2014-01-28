@@ -1,0 +1,128 @@
+<Project>
+  <Name>SWP</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>preprocessing</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>NeighbourhoodGraph</Name>
+        <Access>Public</Access>
+        <Location left="88" top="628" />
+        <Size width="444" height="231" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Map adjacencyLists</Member>
+        <Member type="Field">private Map distanceMap</Member>
+        <Member type="Field">private double alpha</Member>
+        <Member type="Method">public void setVertices(Set&lt;Point2D&gt; points)</Member>
+        <Member type="Method">public double distance(Point2D a, Point2D b)</Member>
+        <Member type="Method">public void calculateAllDistances()</Member>
+        <Member type="Method">public List&lt;Edge&lt;Point2D&gt;&gt; getNeighbours(Point2D vertex)</Member>
+        <Member type="Method">private Set&lt;Coordinate&gt; toCoordinateSet(Set&lt;Point2D&gt; points)</Member>
+        <Member type="Method">private void addAdjacency(Point2D point, Point2D adjacentPoint, double edgeLength)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>MetricGraph&lt;Point2D&gt;</Name>
+        <Access>Public</Access>
+        <Location left="74" top="178" />
+        <Size width="245" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">List&lt;Edge&lt;V&gt;&gt; getNeighbours(V node)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>HashSet</Name>
+        <Access>Public</Access>
+        <Location left="355" top="358" />
+        <Size width="181" height="213" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void add(E e)</Member>
+        <Member type="Method">public void clear()</Member>
+        <Member type="Method">public Object clone()</Member>
+        <Member type="Method">public boolean contains(Object o)</Member>
+        <Member type="Method">public boolean isEmpty()</Member>
+        <Member type="Method">public Iterator&lt;E&gt; iterator()</Member>
+        <Member type="Method">public boolean remove(Object o)</Member>
+        <Member type="Method">public int size()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GPSMetricSpace</Name>
+        <Access>Public</Access>
+        <Location left="140" top="1001" />
+        <Size width="246" height="107" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public Set&lt;Point2D&gt; parse(String filename)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EpsilonNet</Name>
+        <Access>Public</Access>
+        <Location left="857" top="925" />
+        <Size width="297" height="172" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private double gridSize</Member>
+        <Member type="Field">private static Comparator&lt;Point2D&gt; paintComparator</Member>
+        <Member type="Constructor">public EpsilonNet(Set&lt;Point2D&gt; points, double epsilon)</Member>
+        <Member type="Method">private Point getCellKey(Point2D point)</Member>
+        <Member type="Method">private Set&lt;Point&gt; getNeighbourhoodKeys(Point2D point)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EuclideanMetricSpace</Name>
+        <Access>Public</Access>
+        <Location left="711" top="392" />
+        <Size width="162" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public double distance(Point2D a, Point2D b)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>MetricSpace&lt;P&gt;</Name>
+        <Access>Public</Access>
+        <Location left="501" top="178" />
+        <Size width="246" height="105" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">double distance(P a, P b)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>ImageMetricSpace</Name>
+        <Access>Public</Access>
+        <Location left="449" top="1039" />
+        <Size width="351" height="99" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">private Set&lt;Point2D&gt; extractPixels(Buffered Image, Color color)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="0" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="0" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="3" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="5" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
