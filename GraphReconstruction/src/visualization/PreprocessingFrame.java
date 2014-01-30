@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
@@ -23,10 +22,11 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
-import main.MetricGraph;
 import main.MetricGraph.Edge;
+import main.MetricSpace;
 import preprocessing.GPSMetricSpace;
 import preprocessing.ImageMetricSpace;
+import preprocessing.NeighbourhoodGraph;
 
 public class PreprocessingFrame extends JFrame {
 
@@ -37,7 +37,8 @@ public class PreprocessingFrame extends JFrame {
 	private static final int PADDING = 10;
 
 	private Canvas canvas;
-	private MetricGraph<Point2D> graph;
+	private NeighbourhoodGraph previewGraph;
+	private MetricSpace<Point2D> preprocessedSpace;
 
 	JTextField fileInput, epsilonInput, alphaInput;
 	JButton browseButton, previewButton, continueButton;
@@ -46,63 +47,13 @@ public class PreprocessingFrame extends JFrame {
 	public PreprocessingFrame() throws IOException {
 		super("Preprocessing");
 
-		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getTopPanel(), BorderLayout.NORTH);
 		getContentPane().add(getCanvasPanel(), BorderLayout.CENTER);
 		getContentPane().add(getBottomPanel(), BorderLayout.SOUTH);
-
-		browseButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int returnVal = fileChooser.showOpenDialog(PreprocessingFrame.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					fileInput.setText(fileChooser.getSelectedFile().getPath());
-				}
-			}
-		});
-
-		previewButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String file = fileInput.getText();
-				double epsilon = Double.parseDouble(epsilonInput.getText());
-				double alpha = Double.parseDouble(alphaInput.getText());
-
-				try {
-					if (file.endsWith(".gpx"))
-						PreprocessingFrame.this.setGraph(new GPSMetricSpace(file, epsilon, alpha, false));
-					else
-						PreprocessingFrame.this.setGraph(new ImageMetricSpace(file, epsilon, alpha, false));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		continueButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO check if preview graph already exists (avoid redundant calculations)
-
-				String file = fileInput.getText();
-				double epsilon = Double.parseDouble(epsilonInput.getText());
-				double alpha = Double.parseDouble(alphaInput.getText());
-
-				try {
-					if (file.endsWith(".gpx"))
-						graph = new GPSMetricSpace(file, epsilon, alpha);
-					else
-						graph = new ImageMetricSpace(file, epsilon, alpha);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
 		pack();
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -138,6 +89,15 @@ public class PreprocessingFrame extends JFrame {
 
 		// add browse button
 		browseButton = new JButton("Browse");
+		browseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int returnVal = fileChooser.showOpenDialog(PreprocessingFrame.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					fileInput.setText(fileChooser.getSelectedFile().getPath());
+				}
+			}
+		});
 		filePanel.add(browseButton, BorderLayout.EAST);
 
 		fileChooser = new JFileChooser();
@@ -203,7 +163,7 @@ public class PreprocessingFrame extends JFrame {
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.setBorder(new EmptyBorder(0, 2*PADDING, 2*PADDING, 2*PADDING));
 		canvasPanel.setBackground(Color.DARK_GRAY);
-		canvas = new Canvas(WIDTH, HEIGHT);
+		canvas = new PreprocessingCanvas(PADDING);
 		canvasPanel.add(canvas, BorderLayout.CENTER);
 		return canvasPanel;
 	}
@@ -214,81 +174,77 @@ public class PreprocessingFrame extends JFrame {
 		bottomPanel.setBackground(Color.DARK_GRAY);
 
 		previewButton = new JButton("Preview");
+		previewButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String file = fileInput.getText();
+					double epsilon = Double.parseDouble(epsilonInput.getText());
+					double alpha = Double.parseDouble(alphaInput.getText());
+
+					if (file.endsWith(".gpx"))
+						previewGraph = GPSMetricSpace.preview(file, epsilon, alpha);
+					else
+						previewGraph = ImageMetricSpace.preview(file, epsilon, alpha);
+					canvas.update(previewGraph);
+				} catch (IOException e) {
+					// TODO handle the exception more elegantly?
+					throw new RuntimeException(e);
+				}
+			}
+		});
 		bottomPanel.add(previewButton, BorderLayout.WEST);
 
 		continueButton = new JButton("Continue");
+		continueButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (previewGraph != null)
+					preprocessedSpace = new NeighbourhoodGraph(previewGraph);
+				else {
+					try {
+						String file = fileInput.getText();
+						double epsilon = Double.parseDouble(epsilonInput.getText());
+						double alpha = Double.parseDouble(alphaInput.getText());
+
+						if (file.endsWith(".gpx"))
+							preprocessedSpace = new GPSMetricSpace(file, epsilon, alpha);
+						else
+							preprocessedSpace = new ImageMetricSpace(file, epsilon, alpha);
+					} catch (IOException e) {
+						// TODO handle the exception more elegantly?
+						throw new RuntimeException(e);
+					}
+				}
+				new MainFrame(preprocessedSpace);
+			}
+		});
 		bottomPanel.add(continueButton, BorderLayout.EAST);
 
 		return bottomPanel;
 	}
 
-	public void setGraph(MetricGraph<Point2D> graph) {
-		this.graph = graph;
-		canvas.setScale();
-		repaint();
-	}
-
-	private class Canvas extends JPanel {
+	private class PreprocessingCanvas extends Canvas {
 
 		private static final long serialVersionUID = -882600185441468062L;
 
 		private static final int POINT_SIZE = 3;
-		private double offsetX, offsetY;
-		private double factor;
 
-		public Canvas(int width, int height) {
-//			setPreferredSize(new Dimension(width, height));
-			setBackground(Color.WHITE);
-		}
-
-		private void setScale() {
-			offsetX = Double.POSITIVE_INFINITY;
-			offsetY = Double.POSITIVE_INFINITY;
-			double maxX = Double.NEGATIVE_INFINITY;
-			double maxY = Double.NEGATIVE_INFINITY;
-			for (Point2D vertex : graph) {
-				if (vertex.getX() < offsetX)
-					offsetX = vertex.getX();
-				if (vertex.getY() < offsetY)
-					offsetY = vertex.getY();
-				if (vertex.getX() > maxX)
-					maxX = vertex.getX();
-				if (vertex.getY() > maxY)
-					maxY = vertex.getY();
-			}
-			double width = maxX - offsetX;
-			double height = maxY - offsetY;
-			Dimension canvasSize = getSize();
-			factor = Math.min(
-					(canvasSize.width - 2 * PADDING) / width,
-					(canvasSize.height - 2 * PADDING) / height
-			);
-		}
-
-		private Point getPixel(Point2D point) {
-			int x = (int) (factor * (point.getX() - offsetX)) + PADDING;
-			int y = (int) (factor * (point.getY() - offsetY)) + PADDING;
-			return new Point(x, y);
+		public PreprocessingCanvas(int padding) {
+			super(padding);
 		}
 
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
-			if (graph == null) return;
-			setScale();
 			Graphics2D g2 = (Graphics2D) g;
-			System.out.println("Painting vertices and edges...");
-			for (Point2D point : graph) {
-				Point pixel = getPixel(point);
-				g2.drawOval(
-						pixel.x - (POINT_SIZE / 2),
-						pixel.y - (POINT_SIZE / 2),
-						POINT_SIZE, POINT_SIZE
-				);
-				for (Edge<Point2D> edge : graph.getNeighbours(point)) {
-					if (point.getX() <= edge.neighbour.getX()) {
-						Point otherPixel = getPixel(edge.neighbour);
-						g2.drawLine(pixel.x, pixel.y, otherPixel.x, otherPixel.y);
+			if (previewGraph != null) {
+				for (Point2D vertex : previewGraph) {
+					drawPoint(vertex, POINT_SIZE, Color.BLACK, g2);
+					for (Edge<Point2D> edge : previewGraph.getNeighbours(vertex)) {
+						if (vertex.getX() <= edge.neighbour.getX()) {
+							drawEdge(vertex, edge.neighbour, Color.BLACK, g2);
+						}
 					}
 				}
 			}
