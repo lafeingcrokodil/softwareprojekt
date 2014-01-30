@@ -34,7 +34,7 @@ public class Maintest {
     	farben.add(Color.GREEN);
     	farben.add(Color.MAGENTA);
     	farben.add(Color.ORANGE);
-    	MetricSpace<Point2D> space = new ImageMetricSpace(cube, 1);
+    	MetricSpace<Point2D> space = new ImageMetricSpace(cube, 0, 1);
     	SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>("test");
     //	test.add(space, Color.BLACK);
     	

@@ -109,7 +109,7 @@ public class PreprocessingVisualizer {
 		case "DOUBLE_LOOP":
 			return new GPSMetricSpace("traces/DoubleLoop_2959Points.gpx", 0.002, 0.002);
 		case "CUBE":
-			return new ImageMetricSpace("images/cubeTest.png", 1);
+			return new ImageMetricSpace("images/cubeTest.png", 0, 1);
 		case "GRAPH":
 			return new ImageMetricSpace("images/graph.png", 5, 5);
 		default:
@@ -129,6 +129,6 @@ public class PreprocessingVisualizer {
 		if (file.endsWith(".gpx"))
 			return new GPSMetricSpace(file, epsilon, alpha);
 		else
-			return new ImageMetricSpace(file, alpha);
+			return new ImageMetricSpace(file, epsilon, alpha);
 	}
 }

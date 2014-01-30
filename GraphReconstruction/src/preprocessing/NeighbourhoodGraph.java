@@ -37,23 +37,23 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 
 	private static final long serialVersionUID = -6029923560094150514L;
 
-	protected Logger log = new Logger(Level.DEBUG);
+	protected static Logger log = new Logger(Level.DEBUG);
 
 	/**
 	 * A map storing the adjacencies between vertices in this graph.
 	 */
-	private Map<Point2D, List<Edge<Point2D>>> adjacencyLists = new HashMap<>();
+	protected Map<Point2D, List<Edge<Point2D>>> adjacencyLists = new HashMap<>();
 
 	/**
 	 * A map storing the shortest path distances between each pair of points.
 	 */
 	// TODO save space by avoiding redundancy?
-	private Map<Point2D, Map<Point2D, Double>> distanceMap = new HashMap<>();
+	protected Map<Point2D, Map<Point2D, Double>> distanceMap = new HashMap<>();
 
 	/**
 	 * The constant used in calculating the underlying alpha complex.
 	 */
-	private double alpha;
+	protected double alpha;
 
 	/**
 	 * Creates a new empty neighbourhood graph.
@@ -62,6 +62,19 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 */
 	public NeighbourhoodGraph(double alpha) {
 		this.alpha = alpha;
+	}
+
+	/**
+	 * Constructs a neighbourhood graph based on an existing neighbourhood graph
+	 * that already has all its vertices and edges, but no distances.
+	 * 
+	 * @param partialGraph a graph that is only missing distances
+	 */
+	public NeighbourhoodGraph(NeighbourhoodGraph partialGraph) {
+		this(partialGraph.alpha);
+		setVertices(partialGraph);
+		adjacencyLists.putAll(partialGraph.adjacencyLists);
+		calculateAllDistances();
 	}
 
 	/**
@@ -104,6 +117,8 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 * dynamic programming algorithm.
 	 */
 	public void calculateAllDistances() {
+		log.debug("Calculating shortest path distances...");
+
 		// initialization (only direct paths allowed)
 		log.debug("Initializing distances...");
 		for (Point2D vertex : this) {
@@ -133,6 +148,8 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 				}
 			}
 		}
+
+		log.debug("Finished calculating distances.");
 	}
 
 	@Override
