@@ -9,9 +9,9 @@ public class Reconstruction<P> {
 	private MetricSpaceImplemented<P> workspace;
 	//private MetricSpaceImplemented<P> emptyspace;
 	private double radius;
-	private MetricGraph<P> returngraph;
+	private MetricGraph<LinkedList<P>> returngraph;
 
-	Reconstruction(MetricSpace<P> space, double r) {
+	public Reconstruction(MetricSpace<P> space, double r) {
 	//	this.inputSpace = space;
 		this.workspace = new MetricSpaceImplemented<P>(space);
 		this.radius = r;
@@ -26,7 +26,7 @@ public class Reconstruction<P> {
 		
 		
 	}
-	MetricSpaceImplemented<P> testreturn(){
+	public MetricSpaceImplemented<P> testreturn(){
 		return this.workspace;
 	}
 	private void reconstruction() throws Exception {
@@ -85,7 +85,7 @@ public class Reconstruction<P> {
 		this.returngraph = createGraphwithDiameter(graph);
 	}
 
-	private MetricGraph<P> createGraphwithDiameter(ReconstructedSimpleGraph<LinkedList<P>> graph) {
+	private MetricGraph<LinkedList<P>> createGraphwithDiameter(ReconstructedSimpleGraph<LinkedList<P>> graph) {
 		
 		List<LinkedList<P>> nodes = graph.getAllNodes();
 		Iterator<LinkedList<P>> iter3 = nodes.iterator();
@@ -99,7 +99,7 @@ public class Reconstruction<P> {
 				graph.setDistance(punkt, punkt2, this.getDiameter(graph.getComponent(punkt, punkt2)));
 			}
 		}
-		return null;
+		return graph;
 	}
 
 	private ReconstructedSimpleGraph<LinkedList<P>> findeKanten(
@@ -150,7 +150,7 @@ public class Reconstruction<P> {
 		return result;
 	}
 
-	public MetricGraph<P> get_graph() {
+	public MetricGraph<LinkedList<P>> get_graph() {
 		return this.returngraph;
 	}
 
