@@ -1,12 +1,17 @@
 package main;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 	/*
 	 * @param <P> the type of points in the metric space
 	 */
 public class MetricSpaceImplemented<P> extends LinkedList<P> implements MetricSpace<P>{
+
+	private static final long serialVersionUID = 8694603574871676777L;
+
+	public static final int PREL_BRANCH = 1;
+	public static final int EDGE = 2;
+	public static final int BRANCH = 3;
+
 	/*
 	 * MetricSpaceImplemented instances for grouping labels
 	 */
@@ -92,14 +97,14 @@ public class MetricSpaceImplemented<P> extends LinkedList<P> implements MetricSp
 			branch = temp;
 		}
 		
-		if(label == 1){ prelBranch.add(p);
+		if(label == PREL_BRANCH){ prelBranch.add(p);
 		//System.out.println("liste2 (1) " + prelBranch.size());
 }
-		if(label == 2){ edge.add(p);
+		if(label == EDGE){ edge.add(p);
 		//System.out.println("liste2 (2) " + edge.size());
 
 		}
-		if(label == 3){
+		if(label == BRANCH){
 			branch.add(p);
     		//System.out.println("liste2 (3) " + branch.size());
 		}
@@ -114,7 +119,7 @@ public class MetricSpaceImplemented<P> extends LinkedList<P> implements MetricSp
 		 */
 		for (int i = 0; i < this.size(); i++){
 			if (this.distance(p, this.get(i)) <= r){
-				this.labelAs(p, 3);
+				this.labelAs(p, BRANCH);
 			}
 		}
 	}
@@ -122,8 +127,8 @@ public class MetricSpaceImplemented<P> extends LinkedList<P> implements MetricSp
 	public LinkedList<P> getLabeledAs (int label){
 		//TESTED: ok!
 		//TODO: Add exception?
-		if(label == 1) return prelBranch;
-		if(label == 2) return edge;
+		if(label == PREL_BRANCH) return prelBranch;
+		if(label == EDGE) return edge;
 		else return branch;
 	}
 	
