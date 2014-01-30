@@ -37,10 +37,10 @@ public class MetricImplTest {
 			System.out.println(p.x+", "+p.y);
 			System.out.println(space.distance(newPoint2,p));
 		}*/
-		MetricSpaceImplemented<Point> inR = space.pointsInRadius(newPoint2, 3);
-		for(Point p : inR){
-			System.out.println(p.x+", "+p.y);
-		}
+//		MetricSpaceImplemented<Point> inR = space.pointsInRadius(newPoint2, 3);
+//		for(Point p : inR){
+//			System.out.println(p.x+", "+p.y);
+//		}
 		
 		
 		/*
