@@ -59,7 +59,6 @@ public class Reconstruction<P> {
 		MetricSpaceImplemented<P> branchPoints = workspace.getLabelledAs(MetricSpaceImplemented.BRANCH); // #13
 
 		System.out.println("II. Reconstructing the Graph Structure"); // # 14
-		System.out.println("This can take some time...");
 
 		RipsVietoris<P> edgeGraph = new RipsVietoris<P>(edgePoints, 2 * radius); // #15
 		RipsVietoris<P> vertexGraph = new RipsVietoris<P>(branchPoints, 2 * radius);
@@ -70,6 +69,7 @@ public class Reconstruction<P> {
 		System.out.println("Number of edges: " + edges.size());
 
 		System.out.println("III. Reconstructing the Metric"); // #18
+		System.out.println("This can take some time...");
 		// we combined the last steps of the graph structure reconstruction with the metric reconstruction
 		return matchEdges(vertices, edges); // #17/18
 	}

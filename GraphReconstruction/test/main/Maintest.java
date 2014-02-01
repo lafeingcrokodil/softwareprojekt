@@ -17,18 +17,18 @@ import main.SimpleMetricSpacePlott;
 
 public class Maintest {
 	// pfade unter umstaenden anpassen
-    static String bild = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\mediumTest.png";
-    static String bild2 = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\mediumTest2.png";
-    static String cluster = "E:\\ProgrammProjekteEclipse\\GraphReconstruction\\test\\main\\cluster.png";
-    private static String cube = "images/cubeTest.png";
-    static String graph1 = "test/main/graph1.png";
-    private static String reconstr = "images/reconstr.png";
+    static String bild = "images/mediumTest.png";
+    static String bild2 = "images/mediumTest2.png";
+    static String cluster = "images/cluster.png";
+    static String cube = "images/cubeTest.png";
+    static String graph1 = "images/graph.png";
+    static String reconstr = "images/reconstr.png";
     public static void main(String[] args) throws IOException {
     	//plottertest();
     	reconstructiontest();
     	//riepsvitoristest();
 	}
-    private static void riepsvitoristest() throws IOException {
+    public static void riepsvitoristest() throws IOException {
     	LinkedList<Color> farben= new LinkedList<Color>();
     	farben.add(Color.RED);
     	farben.add(Color.BLUE);
