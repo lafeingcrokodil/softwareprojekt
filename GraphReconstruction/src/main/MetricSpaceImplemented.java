@@ -1,142 +1,139 @@
 package main;
-import java.util.Iterator;
-import java.util.LinkedList;
-	/*
-	 * @param <P> the type of points in the metric space
-	 */
-public class MetricSpaceImplemented<P> extends LinkedList<P> implements MetricSpace<P>{
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * A metric space implementation that provides certain methods that are useful
+ * when reconstructing the underlying metric graph.
+ * 
+ * @param <P> the type of points in the metric space
+ */
+public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace<P> {
 
 	private static final long serialVersionUID = 8694603574871676777L;
 
+	/** The label used for preliminary branch points. */
 	public static final int PREL_BRANCH = 1;
+	/** The label used for edge points. */
 	public static final int EDGE = 2;
+	/** The label used for branch points. */
 	public static final int BRANCH = 3;
 
-	/*
-	 * MetricSpaceImplemented instances for grouping labels
-	 */
-	LinkedList<P> edge;
-	LinkedList<P> prelBranch;
-	LinkedList<P> branch;
-	/*
-	 * Variable for input space given in constructor
-	 */
-	MetricSpace<P> inputSet;
-	
-	
-	/*
-	 * Constructor
+	/** Set of edge points in the metric space. */
+	private Set<P> edgePoints = new HashSet<P>();
+	/** Set of preliminary branch points in the metric space. */
+	private Set<P> prelBranchPoint = new HashSet<P>();
+	/** Set of branch points in the metric space. */
+	private Set<P> branchPoints = new HashSet<P>();
+
+	/** The input space given in the constructor. */
+	private MetricSpace<P> inputSpace;
+
+	/**
+	 * Creates a copy of the given metric space.
+	 * 
+	 * @param space a metric space
 	 */
 	public MetricSpaceImplemented(MetricSpace<P> space) {
-		this.inputSet = space;
-		edge = new LinkedList<P>();
-		prelBranch= new LinkedList<P>();
-		branch= new LinkedList<P>();
-		Iterator<P> iter = space.iterator();
-		while (iter.hasNext()) {
-			P temp = iter.next();
-			this.add(temp);
-		}
+		inputSpace = space;
+		addAll(space);
 	}
-	
-	/*
-	 * Methods
-	 */
-	public LinkedList<P> pointsInRadius(P zentrum, double radius_gr,double radius_kl){
-		LinkedList<P> inRadiusSpace = new LinkedList<P>();
-		for (int i = 0; i < this.size(); i++){
-			if (this.distance(zentrum, this.get(i)) <= radius_gr && this.distance(zentrum, this.get(i)) >= radius_kl){
-				inRadiusSpace.add(this.get(i));
-			}
-		}
-		return inRadiusSpace;
-	}
-	
-	public MetricSpaceImplemented<P> differenceSet(MetricSpaceImplemented<P> space1, MetricSpaceImplemented<P> space2){
-		//TESTED: ok!
-		for(P point : space2){
-			space1.remove(point);
-		}
-		return space1;
-	}
-	MetricSpace<P> getMetric(){
-		return this.inputSet;
-	}
-	
-	public void labelAs(P p, int label){
-		/*
-		 * Label 1 = Preliminary Branch
-		 * Label 2 = Edge
-		 * Label 3 = Branch: relabeling: point must be removed from preliminary label-list
-		 */
-		if(prelBranch.contains(p)){
-			LinkedList<P> temp = new LinkedList<P>();
-			for (int i = 0; i < prelBranch.size();i++){
-				if (p != prelBranch.get(i)){
-					temp.add(prelBranch.get(i));
-				}
-			}
-			prelBranch = temp;
-		}
-		if(edge.contains(p)){
-			LinkedList<P> temp = new LinkedList<P>();
-			for (int i = 0; i < edge.size();i++){
-				if (p != edge.get(i)){
-					temp.add(edge.get(i));
-				}
-			}
-			edge = temp;
-		}
-		if(branch.contains(p)){
-			LinkedList<P> temp = new LinkedList<P>();
-			for (int i = 0; i < branch.size();i++){
-				if (p != branch.get(i)){
-					temp.add(branch.get(i));
-				}
-			}
-			branch = temp;
-		}
-		
-		if(label == PREL_BRANCH){ prelBranch.add(p);
-		//System.out.println("liste2 (1) " + prelBranch.size());
-}
-		if(label == EDGE){ edge.add(p);
-		//System.out.println("liste2 (2) " + edge.size());
 
+	/**
+	 * Returns all points that lie in a ring about the specified centre point.
+	 * The following is guaranteed for all points p in the output set:
+	 * innerRadius &le; distance(centre, p) &le; outerRadius.
+	 * 
+	 * @param centre the point at the centre of the ring
+	 * @param outerRadius the outer radius of the ring
+	 * @param innerRadius the inner radius of the ring
+	 * @return the set of all points that lie in the specified ring.
+	 */
+	public MetricSpaceImplemented<P> getPointsInRadius(P centre,
+			double outerRadius, double innerRadius) {
+
+		// make a copy of this metric space
+		MetricSpaceImplemented<P> pointsInRadius = new MetricSpaceImplemented<>(this);
+
+		// remove all points that don't lie in the ring
+		for (P point : this) {
+			double distance = distance(centre, point);
+			if (distance < innerRadius || distance > outerRadius)
+				pointsInRadius.remove(point);
 		}
-		if(label == BRANCH){
-			branch.add(p);
-    		//System.out.println("liste2 (3) " + branch.size());
-		}
+
+		return pointsInRadius;
 	}
-	
-	public void labelInRadius(P p, double r){
-		//TESTED: ok!
+
+	/**
+	 * Labels the given point with the specified label.
+	 * 
+	 * @param point the point to be labelled
+	 * @param label the label to use
+	 */
+	public void labelAs(P point, int label) {
+		// relabeling: point must be removed from preliminary label set
+		prelBranchPoint.remove(point);
+		edgePoints.remove(point);
+		branchPoints.remove(point);
+
+		if (label == PREL_BRANCH)
+			prelBranchPoint.add(point);
+		else if (label == EDGE)
+			edgePoints.add(point);
+		else if (label == BRANCH)
+			branchPoints.add(point);
+	}
+
+	/**
+	 * Labels all points within the given radius of the specified centre point
+	 * as branch points.
+	 * 
+	 * @param centre the centre point
+	 * @param radius the radius within which points should be labelled
+	 */
+	public void labelInRadius(P centre, double radius) {
 		/*
-		 * Does eventual relabeling of edge points and preliminary branch points
-		 * as branch points. Calls pointsInRadius()- and labelAs()-method with label
-		 * 3 (= branch points)
+		 * Does relabelling of edge points and preliminary branch points as
+		 * branch points if necessary.
 		 */
-		for (int i = 0; i < this.size(); i++){
-			if (this.distance(p, this.get(i)) <= r){
-				this.labelAs(p, BRANCH);
-			}
+		for (P point : this) {
+			if (distance(centre, point) <= radius)
+				labelAs(point, BRANCH);
 		}
 	}
-	
-	public LinkedList<P> getLabeledAs (int label){
-		//TESTED: ok!
-		//TODO: Add exception?
-		if(label == PREL_BRANCH) return prelBranch;
-		if(label == EDGE) return edge;
-		else return branch;
+
+	/**
+	 * Returns a metric space containing all points in this metric space that
+	 * were given the specified label.
+	 * 
+	 * @param label one of EDGE, PREL_BRANCH or BRANCH
+	 * @return a metric space containing all points with the specified label
+	 */
+	public MetricSpaceImplemented<P> getLabelledAs(int label) {
+		MetricSpaceImplemented<P> subspace = new MetricSpaceImplemented<>(this);
+
+		// remove all points (blank slate)
+		subspace.clear();
+
+		// add the relevant points back
+		if (label == PREL_BRANCH)
+			subspace.addAll(prelBranchPoint);
+		else if (label == EDGE)
+			subspace.addAll(edgePoints);
+		else if (label == BRANCH)
+			subspace.addAll(branchPoints);
+
+		return subspace;
 	}
-	
+
 	@Override
-	public double distance(P a, P b){
+	public double distance(P a, P b) {
 		/*
-		 * uses the distance-method of the MetricSpace instance that is given in the constructor
+		 * Uses the distance method of the MetricSpace instance that is given in
+		 * the constructor.
 		 */
-		return inputSet.distance(a, b);
+		return inputSpace.distance(a, b);
 	}
 }

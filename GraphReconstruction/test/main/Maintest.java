@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Set;
 
 import preprocessing.ImageMetricSpace;
 import main.MetricSpace;
@@ -48,17 +49,18 @@ public class Maintest {
     	//-------------------------------------------------------
     	
     	
-    	System.out.println("Degree: " + rip.deg());
-    	LinkedList<LinkedList<Point2D>> a = rip.getComponents();
+    	System.out.println("Degree: " + rip.getDegree());
+    	Set<Set<Point2D>> a = rip.getComponents();
     
-    	for (int i = 0; i < a.size(); i++){
+    	int i = 0;
+    	for (Set<Point2D> pointSet : a){
     		MetricSpace<Point2D> temp = new Simpleimagespace();
-    		for (int j = 0; j < a.get(i).size(); j++){
-    			temp.add(a.get(i).get(j));
+    		for (Point2D point : pointSet){
+    			temp.add(point);
     			
     		//	System.out.println(a.get(i).get(j).toString());
     		}
-    		test.add(temp, farben.get(i % farben.size()));
+    		test.add(temp, farben.get((i++) % farben.size()));
 			//System.out.println(temp.toString() + " " + farben.get(i % farben.size()).toString());
 
     	}
@@ -76,26 +78,25 @@ public class Maintest {
     public static void reconstructiontest() throws IOException{
     	//MetricSpace<Point2D> space = new ImageMetricSpace(bild,1.0); // welche werte fuer alpha
     			MetricSpace<Point2D> space = new Simpleimagespace(cube); // standard image space geht nicht
-    			double r = 5.6;
+    			double r = 1;
     			Reconstruction<Point2D> rec = new Reconstruction<Point2D>(space,r);
     			SimpleMetricSpacePlott<Point2D> test = new SimpleMetricSpacePlott<Point2D>("test");
-    			MetricSpaceImplemented<Point2D> u = rec.testreturn();
-    			LinkedList<Point2D> liste1 = u.getLabeledAs(3);
-    			LinkedList<Point2D> liste2 = u.getLabeledAs(2);
+    			rec.reconstructMetricGraph();
+    			MetricSpaceImplemented<Point2D> u = rec.getWorkspace();
+    			Set<Point2D> liste1 = u.getLabelledAs(MetricSpaceImplemented.BRANCH);
+    			Set<Point2D> liste2 = u.getLabelledAs(MetricSpaceImplemented.EDGE);
     			MetricSpace<Point2D> temp1 = new Simpleimagespace();
     			System.out.println("liste1 (3) " + liste1.size());
 	    		MetricSpace<Point2D> temp2 = new Simpleimagespace();
 	    		System.out.println("liste2 (2) " + liste2.size());
 	    		MetricSpace<Point2D> temp3 = new Simpleimagespace();
-    			for (int i = 0; i < u.size(); i++){
-    	    		
-    	    		Point2D punkt = u.get(i);
-    	    		if (liste1.contains(punkt)){
-    	    			temp1.add(punkt);
-    	    		}else if( liste2.contains(punkt)){
-    	    			temp2.add(punkt);
+    			for (Point2D point : u){
+    	    		if (liste1.contains(point)){
+    	    			temp1.add(point);
+    	    		}else if( liste2.contains(point)){
+    	    			temp2.add(point);
     	    		}else {
-    	    			temp3.add(punkt);
+    	    			temp3.add(point);
     	    		}
     	    	}
         	

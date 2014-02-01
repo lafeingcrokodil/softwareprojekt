@@ -1,15 +1,13 @@
 package preprocessing;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import preprocessing.Logger.Level;
 import main.MetricGraph;
+import preprocessing.Logger.Level;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -42,7 +40,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	/**
 	 * A map storing the adjacencies between vertices in this graph.
 	 */
-	protected Map<Point2D, List<Edge<Point2D>>> adjacencyLists = new HashMap<>();
+	protected Map<Point2D, Set<Edge<Point2D>>> adjacencyLists = new HashMap<>();
 
 	/**
 	 * A map storing the shortest path distances between each pair of points.
@@ -161,9 +159,9 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	}
 
 	@Override
-	public List<Edge<Point2D>> getNeighbours(Point2D vertex) {
+	public Set<Edge<Point2D>> getNeighbours(Point2D vertex) {
 		if (!adjacencyLists.containsKey(vertex))
-			adjacencyLists.put(vertex, new ArrayList<Edge<Point2D>>());
+			adjacencyLists.put(vertex, new HashSet<Edge<Point2D>>());
 		return adjacencyLists.get(vertex);
 	}
 
@@ -188,7 +186,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 */
 	private void addAdjacency(Point2D point, Point2D adjacentPoint, double edgeLength) {
 		if (!adjacencyLists.containsKey(point))
-			adjacencyLists.put(point, new ArrayList<Edge<Point2D>>());
+			adjacencyLists.put(point, new HashSet<Edge<Point2D>>());
 		adjacencyLists.get(point).add(new Edge<>(adjacentPoint, edgeLength));
 	}
 

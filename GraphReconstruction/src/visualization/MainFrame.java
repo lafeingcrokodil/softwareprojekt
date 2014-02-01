@@ -9,7 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
-import java.util.LinkedList;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,7 +37,7 @@ public class MainFrame extends JFrame {
 	private Canvas canvas;
 	private MetricSpace<Point2D> inputSpace;
 	private MetricSpaceImplemented<Point2D> previewSpace;
-	private MetricGraph<LinkedList<Point2D>> outputGraph;
+	private MetricGraph<Set<Point2D>> outputGraph;
 
 	JTextField radiusInput;
 	JButton previewButton, reconstructButton;
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
 		inputSpace = space;
 		canvas.update(inputSpace);
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -108,8 +108,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				double radius = Double.parseDouble(radiusInput.getText());
-				Reconstruction<Point2D> reconstr = new Reconstruction<>(inputSpace, radius);
-				previewSpace = reconstr.testreturn();
+				previewSpace = Reconstruction.labelPoints(inputSpace, radius);
+				outputGraph = null;
 				canvas.repaint();
 			}
 		});
@@ -121,7 +121,8 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				double radius = Double.parseDouble(radiusInput.getText());
 				Reconstruction<Point2D> reconstr = new Reconstruction<>(inputSpace, radius);
-				outputGraph = reconstr.get_graph();
+				outputGraph = reconstr.reconstructMetricGraph();
+				previewSpace = reconstr.getWorkspace();
 				canvas.repaint();
 			}
 		});
@@ -162,30 +163,48 @@ public class MainFrame extends JFrame {
 
 		private void drawPreviewSpace(Graphics2D g2) {
 			drawPoints( // draw edge points
-					previewSpace.getLabeledAs(MetricSpaceImplemented.EDGE),
+					previewSpace.getLabelledAs(MetricSpaceImplemented.EDGE),
 					POINT_SIZE, Color.BLUE, g2
 			);
 
 			drawPoints( // draw branch points
-					previewSpace.getLabeledAs(MetricSpaceImplemented.BRANCH),
+					previewSpace.getLabelledAs(MetricSpaceImplemented.BRANCH),
 					POINT_SIZE, Color.RED, g2
 			);
 
 			drawPoints( // draw preliminary branch points
-					previewSpace.getLabeledAs(MetricSpaceImplemented.PREL_BRANCH),
+					previewSpace.getLabelledAs(MetricSpaceImplemented.PREL_BRANCH),
 					POINT_SIZE, Color.ORANGE, g2
 			);
 		}
 
 		private void drawOutputGraph(Graphics2D g2) {
-			for (LinkedList<Point2D> vertex : outputGraph) {
-				drawPoint(vertex.get(0), 2*POINT_SIZE, Color.RED, g2);
-				for (Edge<LinkedList<Point2D>> edge : outputGraph.getNeighbours(vertex)) {
-					if (vertex.get(0).getX() <= edge.neighbour.get(0).getX()) {
-						drawEdge(vertex.get(0), edge.neighbour.get(0), Color.BLUE, g2);
+			for (Set<Point2D> vertex : outputGraph) {
+				drawPoint(getCentrePoint(vertex), 2*POINT_SIZE, Color.RED, g2);
+				Point2D centrePoint = getCentrePoint(vertex);
+				for (Edge<Set<Point2D>> edge : outputGraph.getNeighbours(vertex)) {
+					Point2D neighbourCentre = getCentrePoint(edge.neighbour);
+					if (centrePoint.getX() <= neighbourCentre.getX()) {
+						drawEdge(centrePoint, neighbourCentre, Color.BLUE, g2);
 					}
 				}
 			}
+		}
+
+		private Point2D getCentrePoint(Set<Point2D> points) {
+			double minX = Double.POSITIVE_INFINITY;
+			double minY = Double.POSITIVE_INFINITY;
+			double maxX = Double.NEGATIVE_INFINITY;
+			double maxY = Double.NEGATIVE_INFINITY;
+
+			for (Point2D point : points) {
+				minX = Math.min(minX, point.getX());
+				minY = Math.min(minY, point.getY());
+				maxX = Math.max(maxX, point.getX());
+				maxY = Math.max(maxY, point.getY());
+			}
+
+			return new Point2D.Double((minX + maxX) / 2, (minY + maxY) / 2);
 		}
 	}
 
