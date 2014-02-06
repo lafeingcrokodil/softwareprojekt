@@ -69,7 +69,6 @@ public class Reconstruction<P> {
 		System.out.println("Number of edges: " + edges.size());
 
 		System.out.println("III. Reconstructing the Metric"); // #18
-		System.out.println("This can take some time...");
 		// we combined the last steps of the graph structure reconstruction with the metric reconstruction
 		return matchEdges(vertices, edges); // #17/18
 	}

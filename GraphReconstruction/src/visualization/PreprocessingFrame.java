@@ -186,7 +186,7 @@ public class PreprocessingFrame extends JFrame {
 						previewGraph = GPSMetricSpace.preview(file, epsilon, alpha);
 					else
 						previewGraph = ImageMetricSpace.preview(file, epsilon, alpha);
-					canvas.update(previewGraph);
+					canvas.repaint();
 				} catch (IOException e) {
 					// TODO handle the exception more elegantly?
 					throw new RuntimeException(e);
@@ -239,6 +239,7 @@ public class PreprocessingFrame extends JFrame {
 			super.paint(g);
 			Graphics2D g2 = (Graphics2D) g;
 			if (previewGraph != null) {
+				setScale(previewGraph);
 				for (Point2D vertex : previewGraph) {
 					drawPoint(vertex, POINT_SIZE, Color.BLACK, g2);
 					for (Edge<Point2D> edge : previewGraph.getNeighbours(vertex)) {

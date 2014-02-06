@@ -24,6 +24,7 @@ import main.MetricGraph;
 import main.MetricGraph.Edge;
 import main.MetricSpace;
 import main.MetricSpaceImplemented;
+import main.ReconstructedGraph.ReconstructedEdge;
 import main.Reconstruction;
 
 public class MainFrame extends JFrame {
@@ -53,7 +54,7 @@ public class MainFrame extends JFrame {
 		pack();
 		
 		inputSpace = space;
-		canvas.update(inputSpace);
+		canvas.repaint();
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -146,6 +147,8 @@ public class MainFrame extends JFrame {
 			super.paint(g);
 			Graphics2D g2 = (Graphics2D) g;
 
+			setScale(inputSpace); // in case the canvas has been resized
+
 			// draw input metric space
 			if (previewSpace != null)
 				drawPreviewSpace(g2);
@@ -184,27 +187,13 @@ public class MainFrame extends JFrame {
 				Point2D centrePoint = getCentrePoint(vertex);
 				for (Edge<Set<Point2D>> edge : outputGraph.getNeighbours(vertex)) {
 					Point2D neighbourCentre = getCentrePoint(edge.neighbour);
-					if (centrePoint.getX() <= neighbourCentre.getX()) {
+					if (centrePoint.equals(neighbourCentre)) {
+						drawLoop(centrePoint, ((ReconstructedEdge) edge).points, Color.BLUE, g2);
+					} else if (centrePoint.getX() <= neighbourCentre.getX()) {
 						drawEdge(centrePoint, neighbourCentre, Color.BLUE, g2);
 					}
 				}
 			}
-		}
-
-		private Point2D getCentrePoint(Set<Point2D> points) {
-			double minX = Double.POSITIVE_INFINITY;
-			double minY = Double.POSITIVE_INFINITY;
-			double maxX = Double.NEGATIVE_INFINITY;
-			double maxY = Double.NEGATIVE_INFINITY;
-
-			for (Point2D point : points) {
-				minX = Math.min(minX, point.getX());
-				minY = Math.min(minY, point.getY());
-				maxX = Math.max(maxX, point.getX());
-				maxY = Math.max(maxY, point.getY());
-			}
-
-			return new Point2D.Double((minX + maxX) / 2, (minY + maxY) / 2);
 		}
 	}
 
