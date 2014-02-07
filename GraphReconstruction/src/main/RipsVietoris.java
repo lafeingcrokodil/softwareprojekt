@@ -92,7 +92,7 @@ public class RipsVietoris<V> {
 	 * 
 	 * @return the number of connected components in this graph
 	 */
-	public int getDegree(){
+	public int getDegree() {
 		return components.size();
 	}
 

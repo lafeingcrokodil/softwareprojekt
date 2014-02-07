@@ -23,7 +23,7 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	/** Set of edge points in the metric space. */
 	private Set<P> edgePoints = new HashSet<P>();
 	/** Set of preliminary branch points in the metric space. */
-	private Set<P> prelBranchPoint = new HashSet<P>();
+	private Set<P> prelBranchPoints = new HashSet<P>();
 	/** Set of branch points in the metric space. */
 	private Set<P> branchPoints = new HashSet<P>();
 
@@ -74,12 +74,12 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 	 */
 	public void labelAs(P point, int label) {
 		// relabeling: point must be removed from preliminary label set
-		prelBranchPoint.remove(point);
+		prelBranchPoints.remove(point);
 		edgePoints.remove(point);
 		branchPoints.remove(point);
 
 		if (label == PREL_BRANCH)
-			prelBranchPoint.add(point);
+			prelBranchPoints.add(point);
 		else if (label == EDGE)
 			edgePoints.add(point);
 		else if (label == BRANCH)
@@ -119,7 +119,7 @@ public class MetricSpaceImplemented<P> extends HashSet<P> implements MetricSpace
 
 		// add the relevant points back
 		if (label == PREL_BRANCH)
-			subspace.addAll(prelBranchPoint);
+			subspace.addAll(prelBranchPoints);
 		else if (label == EDGE)
 			subspace.addAll(edgePoints);
 		else if (label == BRANCH)
