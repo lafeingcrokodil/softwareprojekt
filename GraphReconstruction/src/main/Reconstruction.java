@@ -3,6 +3,7 @@ package main;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * An implementation of the metric graph reconstruction algorithm described in
@@ -13,6 +14,8 @@ import java.util.Set;
  * @param <P> The type of points in the input metric space.
  */
 public class Reconstruction<P> {
+
+	private final static Logger LOGGER = Logger.getLogger("Main");
 
 	/** A working copy of the input metric space. */
 	private MetricSpaceImplemented<P> workspace;
@@ -39,7 +42,7 @@ public class Reconstruction<P> {
 	public MetricGraph<Set<P>> reconstructMetricGraph() {
 		// NOTE: #<number> refers to the line numbers in the paper's pseudocode
 
-		System.out.println("I. Labelling points as edge or branch"); // #1
+		LOGGER.info("I. Labelling points as edge or branch"); // #1
 
 		for (P point : workspace){ // #2
 			MetricSpaceImplemented<P> pointsInRadius = workspace.getPointsInRadius(point, 5 * radius / 3, radius); // #3
@@ -58,17 +61,14 @@ public class Reconstruction<P> {
 		MetricSpaceImplemented<P> edgePoints = workspace.getLabelledAs(MetricSpaceImplemented.EDGE); // #12
 		MetricSpaceImplemented<P> branchPoints = workspace.getLabelledAs(MetricSpaceImplemented.BRANCH); // #13
 
-		System.out.println("II. Reconstructing the Graph Structure"); // # 14
+		LOGGER.info("II. Reconstructing the Graph Structure"); // # 14
 
 		RipsVietoris<P> edgeGraph = new RipsVietoris<P>(edgePoints, 2 * radius); // #15
 		RipsVietoris<P> vertexGraph = new RipsVietoris<P>(branchPoints, 2 * radius);
 		Set<Set<P>> vertices = vertexGraph.getComponents(); // #16
 		Set<Set<P>> edges = edgeGraph.getComponents();
 
-		System.out.println("Number of vertices: " + vertices.size());
-		System.out.println("Number of edges: " + edges.size());
-
-		System.out.println("III. Reconstructing the Metric"); // #18
+		LOGGER.info("III. Reconstructing the Metric"); // #18
 		// we combined the last steps of the graph structure reconstruction with the metric reconstruction
 		return matchEdges(vertices, edges); // #17/18
 	}
@@ -94,7 +94,7 @@ public class Reconstruction<P> {
 
 		for (Set<P> sourceVertex : vertices) {
 
-			System.out.println("Matching edges to vertices... " + (100 * (progress++) / vertices.size()) +"%");
+			LOGGER.info("Matching edges to vertices... " + (100 * (progress++) / vertices.size()) +"%");
 
 			edgeLoop:
 			for (Iterator<Set<P>> iter = unclaimedEdges.iterator(); iter.hasNext(); ) {
@@ -128,6 +128,8 @@ public class Reconstruction<P> {
 				}
 			}
 		}
+
+		LOGGER.info("Done.");
 
 		return result;
 	}

@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import main.MetricGraph;
-import preprocessing.Logger.Level;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -35,7 +35,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 
 	private static final long serialVersionUID = -6029923560094150514L;
 
-	protected static Logger log = new Logger(Level.DEBUG);
+	protected final static Logger LOGGER = Logger.getLogger("Preprocessing");
 
 	/**
 	 * A map storing the adjacencies between vertices in this graph.
@@ -83,18 +83,18 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	public void setVertices(Set<Point2D> points) {
 		clear();        // remove any vertices that were previously added to this graph
 
-		log.debug("Adding vertices to graph...");
+		LOGGER.info("Adding vertices to graph...");
 		addAll(points); // add all specified points to the set of vertices
 
 		// calculate the Delaunay triangulation of the point set
-		log.debug("Triangulating the point set...");
+		LOGGER.info("Triangulating the point set...");
 		DelaunayTriangulationBuilder triangulator = new DelaunayTriangulationBuilder();
 		triangulator.setSites(toCoordinateSet(points));
 		// ASSUMPTION getEdges() always returns a MultiLineString (as claimed in documentation)
 		MultiLineString edges = (MultiLineString) triangulator.getEdges(new GeometryFactory());
 
 		// add edges of the triangulation to this graph
-		log.debug("Adding edges of triangulation to graph...");
+		LOGGER.info("Adding edges of triangulation to graph...");
 		for (int i = 0; i < edges.getNumGeometries(); i++) { // loop over edges
 			Coordinate[] coordinates = edges.getGeometryN(i).getCoordinates();
 			// ASSUMPTION each edge has exactly two vertices
@@ -115,10 +115,9 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 	 * dynamic programming algorithm.
 	 */
 	public void calculateAllDistances() {
-		log.debug("Calculating shortest path distances...");
 
 		// initialization (only direct paths allowed)
-		log.debug("Initializing distances...");
+		LOGGER.info("Initializing distances...");
 		for (Point2D vertex : this) {
 			Map<Point2D, Double> newMap = new HashMap<>();
 			newMap.put(vertex, 0.0); // d(v,v) = 0
@@ -129,12 +128,11 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 		}
 
 		// recursive step (intermediate vertices introduced one by one)
-		log.debug("Recursive step of Floyd-Warshall algorithm:");
 		int count = 0;
 		int total = this.size();
 		for (Point2D via : this) {			// iterate over possible intermediate vertices
 			if ((++count) % 10 == 0)
-				log.debug(count + " of " + total);
+				LOGGER.info("Calculating distances... " + (100 * count / total) + "%");
 			for (Point2D from : this) {		// path starts at this vertex
 				for (Point2D to : this) {	// path ends at this vertex
 					// calculate length of indirect path (from -> via -> to)
@@ -147,7 +145,7 @@ public class NeighbourhoodGraph extends HashSet<Point2D> implements MetricGraph<
 			}
 		}
 
-		log.debug("Finished calculating distances.");
+		LOGGER.info("Done.");
 	}
 
 	@Override

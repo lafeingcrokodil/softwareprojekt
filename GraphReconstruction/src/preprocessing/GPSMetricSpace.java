@@ -52,6 +52,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			coordinates = new EpsilonNet(coordinates, epsilon);
 		NeighbourhoodGraph previewGraph = new NeighbourhoodGraph(alpha);
 		previewGraph.setVertices(coordinates);
+		LOGGER.info("Done.");
 		return previewGraph;
 	}
 
@@ -65,7 +66,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 	 */
 	private static Set<Point2D> parse(String filename) throws IOException {
 
-		log.debug("Extracting GPS coordinates from trace file...");
+		LOGGER.info("Extracting GPS coordinates from trace file...");
 
 		Set<Point2D> coordinates = new HashSet<Point2D>();
 
@@ -128,7 +129,6 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		}
 
 		// returns the set
-		log.debug("Number of extracted points: "+coordinates.size());
 		return coordinates;
 	}
 
@@ -142,13 +142,13 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		double cell = epsilon;
 
 		// for better iteration -> copy coordinates into ArrayList
-		log.debug("Copying coordinates into ArrayList...");
+		LOGGER.info("Copying coordinates into ArrayList...");
 		for (Point2D i : coordinates) {
 			coordinatesCopy.add(i);
 		}
 
 		// max and min -> needed for eNet borders
-		log.debug("Finding min/max coordinates...");
+		LOGGER.info("Finding min/max coordinates...");
 
 		// initialize min, max with first point of array
 		double minX = coordinatesCopy.get(0).getX();
@@ -178,7 +178,7 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 		 * points of each cell will be stored in a LinkedList and every
 		 * LinkedList will be stored in an ArrayList.
 		 */
-		log.debug("Grouping points by grid cell...");
+		LOGGER.info("Grouping points by grid cell...");
 		for (double l=minX;l<maxX;l=l+epsilon) { // X-axis
 			for (double k=minY;k<maxY;k=k+epsilon) { // Y-axis
 
@@ -201,17 +201,13 @@ public class GPSMetricSpace extends NeighbourhoodGraph {
 			}
 		}
 
-		// find the average point of each cell and put it into the result (return) set
-		log.debug("Calculating representative for each occupied grid cell...");
-		log.debug("Epsilon net size: " + eNet.size());
-
+		// find the average point of each occupied grid cell and put it into the result (return) set
 		for (int i = 0; i < eNet.size(); i++){
 			if (i % 10000 == 0)
-				log.debug(i + " of " + eNet.size());
+				LOGGER.info("Calculating representatives... " + i + " of " + eNet.size());
 			result.add(averagePoint(eNet.get(i)));
 		}
 
-		log.debug("Reduced set size: " + result.size());	
 		return result;
 	}
 

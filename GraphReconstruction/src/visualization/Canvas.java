@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.CubicCurve2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.Set;
@@ -102,6 +105,44 @@ public class Canvas extends JPanel {
 		g2.setColor(colour);
 		curve.setCurve(pixel, controlPoints[0], controlPoints[1], pixel);
 		g2.draw(curve);
+	}
+
+	protected Shape getPoint(Point2D point, int size) {
+		Point pixel = getPixel(point);
+		return new Ellipse2D.Double (
+				pixel.x - (size / 2),
+				pixel.y - (size / 2),
+				size, size
+		);
+	}
+
+	protected Shape getEdge(Point2D a, Point2D b) {
+		Point aPixel = getPixel(a);
+		Point bPixel = getPixel(b);
+		return new Line2D.Double(aPixel, bPixel);
+	}
+
+	protected Shape getLoop(Point2D vertex, Set<Point2D> loopPoints) {
+		Point pixel = getPixel(vertex);
+		Point loopCentre = getPixel(getCentrePoint(loopPoints));
+
+		// initialize control points
+		Point[] controlPoints = {
+				new Point(pixel.x + 100, pixel.y - 100),
+				new Point(pixel.x + 100, pixel.y + 100)
+		};
+
+		// rotate control points to point in the direction of the loop's centre
+		double angle = Math.atan((double) (loopCentre.y - pixel.y) / (loopCentre.x - pixel.x));
+		AffineTransform rotation = AffineTransform.getRotateInstance(angle, pixel.x, pixel.y);
+		rotation.transform(controlPoints[0], controlPoints[0]);
+		rotation.transform(controlPoints[1], controlPoints[1]);
+
+		// construct the loop
+		CubicCurve2D curve = new CubicCurve2D.Double();
+		curve.setCurve(pixel, controlPoints[0], controlPoints[1], pixel);
+
+		return curve;
 	}
 
 	protected Point2D getCentrePoint(Set<Point2D> points) {

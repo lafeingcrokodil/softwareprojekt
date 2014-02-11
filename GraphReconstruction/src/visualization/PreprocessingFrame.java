@@ -3,6 +3,7 @@ package visualization;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -11,6 +12,9 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -18,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
@@ -32,6 +37,8 @@ public class PreprocessingFrame extends JFrame {
 
 	private static final long serialVersionUID = -3982152879505777650L;
 
+	private final static Logger LOGGER = Logger.getLogger("Preprocessing");
+
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 800;
 	private static final int PADDING = 10;
@@ -40,9 +47,10 @@ public class PreprocessingFrame extends JFrame {
 	private NeighbourhoodGraph previewGraph;
 	private MetricSpace<Point2D> preprocessedSpace;
 
-	JTextField fileInput, epsilonInput, alphaInput;
-	JButton browseButton, previewButton, continueButton;
-	JFileChooser fileChooser;
+	private JTextField fileInput, epsilonInput, alphaInput;
+	private JButton browseButton, previewButton, continueButton;
+	private JFileChooser fileChooser;
+	private JLabel statusLabel;
 
 	public PreprocessingFrame() throws IOException {
 		super("Preprocessing");
@@ -53,6 +61,20 @@ public class PreprocessingFrame extends JFrame {
 		getContentPane().add(getCanvasPanel(), BorderLayout.CENTER);
 		getContentPane().add(getBottomPanel(), BorderLayout.SOUTH);
 		pack();
+
+		LOGGER.addHandler(new Handler() {
+			@Override
+			public void publish(LogRecord record) {
+				statusLabel.setText(record.getMessage());
+				statusLabel.paintImmediately(statusLabel.getVisibleRect());
+			}
+
+			@Override
+			public void close() throws SecurityException {}
+
+			@Override
+			public void flush() {}
+		});
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -194,6 +216,11 @@ public class PreprocessingFrame extends JFrame {
 			}
 		});
 		bottomPanel.add(previewButton, BorderLayout.WEST);
+
+		statusLabel = new JLabel("", SwingConstants.CENTER);
+		statusLabel.setForeground(Color.WHITE);
+		statusLabel.setFont(new Font(null, Font.PLAIN, 18));
+		bottomPanel.add(statusLabel, BorderLayout.CENTER);
 
 		continueButton = new JButton("Continue");
 		continueButton.addActionListener(new ActionListener() {
