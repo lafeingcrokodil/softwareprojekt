@@ -24,7 +24,7 @@
       <Entity type="Interface">
         <Name>MetricGraph&lt;Point2D&gt;</Name>
         <Access>Public</Access>
-        <Location left="210" top="395" />
+        <Location left="217" top="409" />
         <Size width="245" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">List&lt;Edge&lt;V&gt;&gt; getNeighbours(V node)</Member>
@@ -92,7 +92,7 @@
       <Entity type="Interface">
         <Name>Set&lt;P&gt;</Name>
         <Access>Public</Access>
-        <Location left="541" top="11" />
+        <Location left="540" top="10" />
         <Size width="179" height="159" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void add(P p)</Member>
@@ -174,12 +174,14 @@
         <Name>ReconstructedGraph</Name>
         <Access>Public</Access>
         <Location left="297" top="556" />
-        <Size width="461" height="145" />
+        <Size width="461" height="179" />
         <Collapsed>False</Collapsed>
         <Member type="Field">protected Map&lt;Set&lt;P&gt;,Set&lt;Edge&gt;&gt; adjacencyLists</Member>
         <Member type="Field">protected Map&lt;Set&lt;P&gt;, Map&lt;Set, Double&gt;&gt; distanceMap</Member>
         <Member type="Method">public void setVertices(Set&lt;Set&lt;P&gt;&gt; points)</Member>
         <Member type="Method">public void addEdge(Set&lt;P&gt; source, Set&lt;P&gt; target, Set&lt;P&gt; edgePoints, double distance)</Member>
+        <Member type="Method">public List&lt;Edge&lt;Set&gt;&gt; getNeighbours(Set&lt;P&gt; vertex)</Member>
+        <Member type="Method">public double distance(Set&lt;P&gt; a, Set&lt;P&gt; b)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -194,7 +196,7 @@
       <Entity type="Class">
         <Name>RipsVietoris</Name>
         <Access>Public</Access>
-        <Location left="820" top="540" />
+        <Location left="812" top="556" />
         <Size width="223" height="182" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private MetricSpace&lt;V&gt; space</Member>
@@ -224,7 +226,7 @@
         <Name>MetricSpaceImplemented</Name>
         <Access>Public</Access>
         <Location left="622" top="302" />
-        <Size width="467" height="214" />
+        <Size width="467" height="230" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private Set&lt;P&gt; edgePoints</Member>
         <Member type="Field">private Set&lt;P&gt; prelBranchPoints</Member>
@@ -234,6 +236,7 @@
         <Member type="Method">public void labelAs(P point, int label)</Member>
         <Member type="Method">public void labelInRadius(P centre, double radius)</Member>
         <Member type="Method">public MetricSpaceImplemented&lt;P&gt; getLabelledAs(int label)</Member>
+        <Member type="Method">public double distance(P a, P b)</Member>
         <Modifier>None</Modifier>
       </Entity>
     </Entities>
@@ -247,16 +250,12 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="3" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
