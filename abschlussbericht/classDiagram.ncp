@@ -142,62 +142,94 @@
   </ProjectItem>
   <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
     <Name>main</Name>
-    <Language>Java</Language>
+    <Language>CSharp</Language>
     <Entities>
       <Entity type="Interface">
-        <Name>MetricSpace</Name>
+        <Name>MetricGraph&lt;V&gt;</Name>
         <Access>Public</Access>
-        <Location left="508" top="35" />
-        <Size width="172" height="95" />
+        <Location left="383" top="310" />
+        <Size width="245" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">List&lt;Edge&lt;V&gt;&gt; getNeighbours(V vertex)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>MetricSpace&lt;P&gt;</Name>
+        <Access>Public</Access>
+        <Location left="560" top="81" />
+        <Size width="246" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">double distance(P a, P b)</Member>
       </Entity>
-      <Entity type="Interface">
-        <Name>MetricGraph</Name>
+      <Entity type="Class">
+        <Name>Reconstruction</Name>
         <Access>Public</Access>
-        <Location left="352" top="302" />
-        <Size width="243" height="97" />
+        <Location left="25" top="62" />
+        <Size width="451" height="196" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">Set&lt;Edge&lt;V&gt;&gt; getNeighbours(V vertex)</Member>
+        <Member type="Field">private double radius</Member>
+        <Member type="Field">private MetricSpaceImplemented&lt;P&gt; workspace</Member>
+        <Member type="Method">public MetricGraph&lt;Set&lt;P&gt;&gt; reconstructMetricGraph()</Member>
+        <Member type="Method">private MetricGraph&lt;Set&lt;P&gt;&gt; matchEdges(Set&lt;Set&lt;P&gt;&gt; vertices, Set&lt;Set&lt;P&gt;&gt; edges)</Member>
+        <Member type="Method">private double getDiameter(Set&lt;P&gt; points)</Member>
+        <Member type="Method">public MetricSpaceImplemented&lt;P&gt; getWorkspace()</Member>
+        <Member type="Method">public static MetricSpaceImplemented&lt;P&gt; labelPoints(MetricSpace&lt;P&gt; space, double radius)</Member>
+        <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>Edge</Name>
+        <Name>Edge&lt;V&gt;</Name>
         <Access>Public</Access>
-        <Location left="64" top="302" />
-        <Size width="162" height="119" />
+        <Location left="38" top="310" />
+        <Size width="162" height="122" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">public V neighbour</Member>
         <Member type="Field">public double distance</Member>
+        <Member type="Field">public V neighbour</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>ReconstructedGraph</Name>
+        <Name>MetricSpaceImplemented&lt;P&gt;</Name>
         <Access>Public</Access>
-        <Location left="297" top="556" />
-        <Size width="461" height="179" />
+        <Location left="679" top="298" />
+        <Size width="550" height="230" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">protected Map&lt;Set&lt;P&gt;,Set&lt;Edge&gt;&gt; adjacencyLists</Member>
-        <Member type="Field">protected Map&lt;Set&lt;P&gt;, Map&lt;Set, Double&gt;&gt; distanceMap</Member>
-        <Member type="Method">public void setVertices(Set&lt;Set&lt;P&gt;&gt; points)</Member>
-        <Member type="Method">public void addEdge(Set&lt;P&gt; source, Set&lt;P&gt; target, Set&lt;P&gt; edgePoints, double distance)</Member>
-        <Member type="Method">public List&lt;Edge&lt;Set&gt;&gt; getNeighbours(Set&lt;P&gt; vertex)</Member>
-        <Member type="Method">public double distance(Set&lt;P&gt; a, Set&lt;P&gt; b)</Member>
+        <Member type="Field">private Set&lt;P&gt; edgePoints</Member>
+        <Member type="Field">private Set&lt;P&gt; prelBranchPoints</Member>
+        <Member type="Field">private Set&lt;P&gt; branchPoints</Member>
+        <Member type="Field">MetricSpace&lt;P&gt; inputSpace</Member>
+        <Member type="Method">public MetricSpaceImplemented&lt;P&gt; getPointsInRadius(P centre, double outerRadius, double innerRadius)</Member>
+        <Member type="Method">public void labelAs(P point, int label)</Member>
+        <Member type="Method">public void labelInRadius(P centre, double radius)</Member>
+        <Member type="Method">public MetricSpaceImplemented&lt;P&gt; getLabelledAs(int label)</Member>
+        <Member type="Method">public double distance(P a, P b)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>ReconstructedEdge</Name>
+        <Name>ReconstructedGraph&lt;P&gt;</Name>
         <Access>Public</Access>
-        <Location left="64" top="578" />
-        <Size width="162" height="104" />
+        <Location left="279" top="495" />
+        <Size width="304" height="179" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">protected Map&lt;Set&lt;P&gt;, Set&lt;Egde&gt;&gt; adjacencyLists</Member>
+        <Member type="Field">protected Map&lt;Set&lt;P&gt;, Map &lt;Set, Double&gt;&gt; newField</Member>
+        <Member type="Method">public void setVertices(Set&lt;Set&lt;P&gt;&gt; points)</Member>
+        <Member type="Method">public void addEdge(Set&lt;P&gt; sourceVertex, Set&lt;P&gt; targetVertex, Set&lt;P&gt; edgePoints, double distance)</Member>
+        <Member type="Method">public double distance(Set&lt;P&gt; a, Set&lt;P&gt; b)</Member>
+        <Member type="Method">public Set&lt;Edge&lt;Set&gt;&gt; getNeighbours(Set&lt;P&gt; vertex)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ReconstructionEdge</Name>
+        <Access>Public</Access>
+        <Location left="38" top="550" />
+        <Size width="165" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Field">public Set&lt;P&gt; points</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>RipsVietoris</Name>
+        <Name>RipsVietoris&lt;V&gt;</Name>
         <Access>Public</Access>
-        <Location left="812" top="556" />
-        <Size width="223" height="182" />
+        <Location left="710" top="564" />
+        <Size width="232" height="186" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private MetricSpace&lt;V&gt; space</Member>
         <Member type="Field">private double radius</Member>
@@ -207,67 +239,39 @@
         <Member type="Method">public int getDegree()</Member>
         <Modifier>None</Modifier>
       </Entity>
-      <Entity type="Class">
-        <Name>Reconstruction</Name>
-        <Access>Public</Access>
-        <Location left="32" top="35" />
-        <Size width="447" height="216" />
-        <Collapsed>False</Collapsed>
-        <Member type="Field">private MetricSpaceImplemented&lt;P&gt; workspace</Member>
-        <Member type="Field">private double radius</Member>
-        <Member type="Method">public MetricGraph&lt;Set&lt;P&gt;&gt; reconstructMetricGraph()</Member>
-        <Member type="Method">private MetricGraph&lt;Set&lt;P&gt;&gt; matchEdges(Set&lt;Set&lt;P&gt;&gt; vertices, Set&lt;Set&lt;P&gt;&gt; edges)</Member>
-        <Member type="Method">private double getDiameter(Set&lt;P&gt; points)</Member>
-        <Member type="Method">public MetricSpaceImplemented&lt;P&gt; getWorkspace()</Member>
-        <Member type="Method">public static MetricSpaceImplemented&lt;P&gt; labelPoints(MetricSpace&lt;P&gt; space, double radius)</Member>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>MetricSpaceImplemented</Name>
-        <Access>Public</Access>
-        <Location left="622" top="302" />
-        <Size width="467" height="230" />
-        <Collapsed>False</Collapsed>
-        <Member type="Field">private Set&lt;P&gt; edgePoints</Member>
-        <Member type="Field">private Set&lt;P&gt; prelBranchPoints</Member>
-        <Member type="Field">private Set&lt;P&gt; branchPoints</Member>
-        <Member type="Field">private MetricSpace&lt;P&gt; inputSpace</Member>
-        <Member type="Method">public MetricSpaceImplemented&lt;P&gt; getPointsInRadius(P centre, double outer, double inner)</Member>
-        <Member type="Method">public void labelAs(P point, int label)</Member>
-        <Member type="Method">public void labelInRadius(P centre, double radius)</Member>
-        <Member type="Method">public MetricSpaceImplemented&lt;P&gt; getLabelledAs(int label)</Member>
-        <Member type="Method">public double distance(P a, P b)</Member>
-        <Modifier>None</Modifier>
-      </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Realization" first="3" second="1">
+      <Relationship type="Generalization" first="0" second="1">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="4" second="2">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="3" second="4">
+      <Relationship type="Association" first="0" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="2">
+      <Relationship type="Realization" first="4" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="5" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="5" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
-      </Relationship>
-      <Relationship type="Generalization" first="1" second="0">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="7" second="0">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>
