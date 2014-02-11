@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Handler;
@@ -58,7 +57,7 @@ public class MainFrame extends JFrame {
 	private JLabel statusLabel;
 	private JButton previewButton, reconstructButton;
 
-	private Set<Shape> vertices = new HashSet<>();
+	private Map<Shape, Point2D> vertices = new HashMap<>();
 	private Map<Shape, Double> edges = new HashMap<>();
 
 	public MainFrame(MetricSpace<Point2D> space) {
@@ -180,6 +179,18 @@ public class MainFrame extends JFrame {
 			addMouseMotionListener(new MouseAdapter() {
 				@Override
 				public void mouseMoved(MouseEvent e) {
+					for (Shape vertex : vertices.keySet()) {
+						if (vertex.intersects(new Rectangle2D.Double(
+								e.getX() - POINT_SIZE / 2,
+								e.getY() - POINT_SIZE / 2,
+								POINT_SIZE, POINT_SIZE
+						))) {
+							Point2D v = vertices.get(vertex);
+							statusLabel.setText("(" + v.getX() + "," + v.getY() + ")");
+							return;
+						}
+					}
+
 					for (Shape edge : edges.keySet()) {
 						if (edge.intersects(new Rectangle2D.Double(
 								e.getX() - POINT_SIZE / 2,
@@ -187,7 +198,7 @@ public class MainFrame extends JFrame {
 								POINT_SIZE, POINT_SIZE
 						))) {
 							statusLabel.setText(edges.get(edge).toString());
-							break;
+							return;
 						}
 					}
 				}
@@ -240,7 +251,7 @@ public class MainFrame extends JFrame {
 			// gather all vertices and edges of the output graph
 			for (Set<Point2D> vertex : outputGraph) {
 				Point2D centrePoint = getCentrePoint(vertex);
-				vertices.add(getPoint(centrePoint, 2*POINT_SIZE));
+				vertices.put(getPoint(centrePoint, 2*POINT_SIZE), centrePoint);
 				for (Edge<Set<Point2D>> edge : outputGraph.getNeighbours(vertex)) {
 					Point2D neighbourCentre = getCentrePoint(edge.neighbour);
 					if (centrePoint.equals(neighbourCentre)) {
@@ -261,7 +272,7 @@ public class MainFrame extends JFrame {
 
 			// draw the vertices in red
 			g2.setColor(Color.RED);
-			for (Shape vertex : vertices) {
+			for (Shape vertex : vertices.keySet()) {
 				g2.fill(vertex);
 			}
 		}
