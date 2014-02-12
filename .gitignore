@@ -10,7 +10,7 @@ Thumbs.db
 *.out
 *.run.xml
 *.snm
-*.syntex.gz
+*.synctex.gz
 *.toc
 
 #################
