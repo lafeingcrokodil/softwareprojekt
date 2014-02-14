@@ -41,29 +41,41 @@ Als Grundlage für unsere Arbeit diente uns ein Paper \cite{chenEa2012}, welches
 
 \begin{enumerate}
 \item \textbf{Kanten- und Knotenpunkte bestimmen}\newline
-Zunächst wird festgestellt, welche der in $\left(Y, d_y\right)$ enthaltenen Punkte in $(\hat{X}, d_{\hat{x}})$ zu einer Kante und welche zu einem Knoten gehören werden. Dafür wird um alle im Eingabegraphen enthaltenen Punkte ein Kreisring, dessen Grö{\ss}e abhängig vom Parameter $r$ ist, gelegt. Für die Punktmenge in diesem Kreisring wird der Rips-Vietoris-Graph erstellt. ERKLÄREN!!!!!!!!!!!!! AUCH HIER IST r WICHTIG!!!! Es wird dann der Grad des jeweiligen Knoten bestimmt, indem die Zusammenhangskomponenten des Rips-Vietoris-Graphen gezählt werden. Enthält der Kreisring um einen Knoten zwei Zusammenhangskomponenten, hat er Grad zwei und es handelt sich um einen Punkt, der im Graphen $(\hat{X}, d_{\hat{x}})$ zu einer Kante gehören wird und er erhält das Label \textit{edge point}. Andernfalls wird der Punkt zu einem Knoten gehören und wird daher als \textit{preliminary branch point} gekennzeichnet.
-Diese Markierung erhalten diese Punkte lediglich vorläufig (\textit{preliminary}), da im Anschluss alle Punkte, die innerhalb eines Abstands von $2r$ von einem \textit{preliminary branch point} als \textit{branch point} gekennzeichnet werden. Hierbei werden auch die \textit{preliminary branch points} zu \textit{branch points}, womit sich die Punkte in $\left(Y, d_y\right)$ nun in zwei Teilmengen $\mathbb{E}$ und $\mathbb{V}$ aufteilen lassen. In $\mathbb{E}$ sind dabei die \textit{edge points} enthalten und in $\mathbb{V}$ die \textit{branch points}.\newline
-PSEUDOCODE?\newline
+Zunächst wird festgestellt, welche der in $\left(Y, d_y\right)$ enthaltenen Punkte in $(\hat{X}, d_{\hat{x}})$ zu einer Kante und welche zu einem Knoten gehören werden. Dafür wird um alle im Eingabegraphen enthaltenen Punkte ein Kreisring gelegt, wobei der innere Kreis des Kreisrings den Radius $r$ und der äu"sere den Radius ${5\over 3}r$ hat. Für die Punktmenge in diesem Kreisring wird anschlie"send der Rips-Vietoris-Graph mit dem Parameter ${4 \over 3}r$ erstellt. Das bedeutet, dass alle Punkte, die nicht mehr als ${4 \over 3}r$ voneinander entfernt sind, zu einer Zusammenhangskomponente gefasst werden. Daraufhin wird der Grad des jeweiligen Knoten bestimmt, indem die Zusammenhangskomponenten des Rips-Vietoris-Graphen gezählt werden. Enthält der Kreisring um einen Knoten zwei Zusammenhangskomponenten, hat er Grad zwei und es handelt sich um einen Punkt, der im rekonstruierten Graphen $(\hat{X}, d_{\hat{x}})$ zu einer Kante gehören wird. Daher erhält er das Label \textit{edge point}. Ist der Grad ungleich zwei, wird der Punkt zu einem Knoten gehören und wird daher als \textit{preliminary branch point} gekennzeichnet.
+Diese Markierung erhalten diese Punkte lediglich vorläufig (\textit{preliminary}), da im Anschluss alle Punkte innerhalb eines Abstands von $2r$ von einem \textit{preliminary branch point} als \textit{branch point} gekennzeichnet werden. Hierbei werden auch die \textit{preliminary branch points} zu \textit{branch points}, womit sich die Punkte in $\left(Y, d_y\right)$ nun in zwei Teilmengen $\mathbb{E}$ und $\mathbb{V}$ aufteilen lassen. In $\mathbb{E}$ sind dabei die \textit{edge points} enthalten und in $\mathbb{V}$ die \textit{branch points}. Der Vorgang wird mit Pseudocode in Algorithm \ref{algo1} veranschaulicht. \newline
 \begin{algorithm}
-\caption{Kanten- und Knotenpunkte bestimmen}
+\caption{Kanten- und Knotenpunkte bestimmen}\label{algo1}
 \begin{algorithmic}
-\STATE
+\FORALL{$y \in Y$} 
+\STATE $R \leftarrow C_{{5\over 3}r} \setminus C_r$ 
+\STATE $deg\left(y\right) \leftarrow$ \# Zusammenhangskomponenten im Rips-Vietoris-Graphen$_{{4 \over 3}r}\left(R\right)$
+	\IF{$deg(y) == 2$}
+		\STATE y erhält das Label edge point
+	\ELSE 
+		\STATE y erhält das Label branch point
+	\ENDIF
+\ENDFOR
+\FORALL{$y \in Y$}
+	\IF{$y$ ist nicht weiter als $2r$ von einem preliminary branch point entfernt}
+		\STATE y erhält das Label branch point
+	\ENDIF
+\ENDFOR
 \end{algorithmic}
 \end{algorithm}
 \item \textbf{Struktur des Graphen rekonstruieren}\newline
-Anschlie{\ss}end wird für die beiden Mengen $\mathbb{V}$ und $\mathbb{E}$ der Rips-Vietoris-Graph erstellt. Die entstehenden Zusammenhangskomponenten in $\mathbb{E}$ entsprechen dabei den Kanten und jene in $\mathbb{V}$ den Knoten im Graphen $(\hat{X}, d_{\hat{x}})$. Um dessen Struktur zu vervollständigen müssen nun lediglich noch die Verbindungen die Verbindungen zwischen Kanten und Knoten rekonstruiert werden. Dies geschieht, indem zwei Knoten aus  $\mathbb{V}$ genau dann durch eine Kante $e \in \mathbb{E}$ verbunden werden, wenn sie in ihrer Zusammenhangskomponente Punkte haben, die zu Punkten der Zusammenhangskomponente von $e$ einen kleineren Abstand als $2r$ haben.
+Anschlie{\ss}end wird für die beiden Mengen $\mathbb{V}$ und $\mathbb{E}$ der Rips-Vietoris-Graph mit dem Parameter $2r$ erstellt. Die dabei entstehenden Zusammenhangskomponenten in $\mathbb{E}$ entsprechen nun den Kanten und jene in $\mathbb{V}$ den Knoten im Graphen $(\hat{X}, d_{\hat{x}})$. Um dessen Struktur zu vervollständigen müssen lediglich noch die Verbindungen zwischen Kanten und Knoten rekonstruiert werden. Dies geschieht, indem zwei Knoten aus  $\mathbb{V}$ genau dann durch eine Kante $e \in \mathbb{E}$ verbunden werden, wenn sie in ihrer Zusammenhangskomponente Punkte haben, die zu Punkten der Zusammenhangskomponente von $e$ einen kleineren Abstand als $2r$ haben.
 
 \item \textbf{Metrik rekonstruieren}\newline
-Schlussendlich müssen noch die Längen der Kanten bestimmt werden. Dafür wird jeder Kante in $\hat{X}$ als Länge der Durchmesser ihrer Zusammenhangskomponente zuzüglich $4r$ zugewiesen.
+Schlussendlich müssen noch die Längen der Kanten bestimmt werden. Dafür wird jeder Kante in $\hat{X}$ als Länge der Durchmesser ihrer Zusammenhangskomponente, also der längste kürzeste Weg darin, zuzüglich $4r$ zugewiesen.
 \end{enumerate} 
 
 
 
 \section{Organisation und Umsetzung des Algorithmus in Java}
-Da allen Studenten im Team die objektorientierte Programmiersprache Java geläufig war und sie uns durchaus als geeignet für die Aufgabe schien, haben wir uns entschlossen, unser Programm darin zu schreiben. Für das Arbeiten an unserer Software haben wir uns in drei verschiedene Gruppen aufgeteilt. Die eine Gruppe hat sich mit der Vorverarbeitung der Rohdaten beschäftigt, im Wesentlichen also aus den Rohdaten den metrische Raum $\left(Y, d_y\right)$ für die Eingabe des Algorithmus konstruiert. Die zweite Gruppe hat sich mit der Implementierung des Algorithmus, genauer der Rekonstruktion von $(\hat{X}, d_{\hat{x}})$, in Java auseinandergesetzt, während die dritte für die Visualisierung des Graphen $(\hat{X}, d_{\hat{x}})$ zuständig war. Damit wir stets alle über die Arbeit unserer Teammitglieder informiert waren haben wir unsere Ergebnisse bei \url{github.com} gespeichert und stets aktualisiert. (GENAUER ERKLÄREN?) Um Aufgaben und den Stand der Arbeit daran für alle zugänglich zu dokumentieren haben wir zusätzlich \url{trello.com} genutzt, wo man ein virtuelles Notizbrett erstellen kann. (GENAUER ERKLÄREN!).\newline
-Einschränkung auf GPS und Buchstaben\newline
-
- 
+\subsection*{Organisation und Kommunikation}
+Da allen Studenten im Team die objektorientierte Programmiersprache Java geläufig war und sie uns als durchaus geeignet für die Aufgabe schien, haben wir uns entschlossen, unser Programm darin zu schreiben. Für das Arbeiten an unserer Software haben wir uns in drei verschiedene Gruppen aufgeteilt. Die eine Gruppe hat sich mit der Vorverarbeitung der Rohdaten beschäftigt, im Wesentlichen also aus den Rohdaten den metrische Raum $\left(Y, d_y\right)$ für die Eingabe des Algorithmus konstruiert. Die zweite Gruppe hat sich mit der Implementierung des Algorithmus, genauer der Rekonstruktion von $(\hat{X}, d_{\hat{x}})$, in Java auseinandergesetzt, während die dritte für die Visualisierung des Graphen $(\hat{X}, d_{\hat{x}})$ zuständig war. Damit wir stets alle über die Arbeit unserer Teammitglieder informiert waren haben wir unsere Ergebnisse auf der Hosting-Plattform GitHub\footnote{\url{github.com}} gespeichert und stets aktualisiert. Um anstehende Aufgaben für alle zugänglich zu dokumentieren haben wir zusätzlich das für Projektmanagement bestimmte Anwendung Trello \footnote{\url{trello.com}} genutzt, bei man ein virtuelles Notizbrett erstellen kann. Hier konnte jeder neue Aufgaben einstellen und sich dafür als Bearbeiter eintragen. Zusätzlich konnten wir dort den Stand der Arbeit an diesen Aufgaben dokumentieren, wodurch stets jeder darüber informiert war, woran die anderen gerade arbeiten. \newline
+\subsection*{Zielsetzung}
+ Einschränkung auf GPS und Buchstaben\newline
 \section{Arbeit in den einzelnen Gruppen}
 \subsection{Preprocessing}
 \subsection{Reconstruction}
