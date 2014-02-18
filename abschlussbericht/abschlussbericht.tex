@@ -76,8 +76,29 @@ Schlussendlich müssen noch die Längen der Kanten bestimmt werden. Dafür wird 
 Da allen Studenten im Team die objektorientierte Programmiersprache Java geläufig war und sie uns als durchaus geeignet für die Aufgabe schien, haben wir uns entschlossen, unser Programm darin zu schreiben. Für das Arbeiten an unserer Software haben wir uns in drei verschiedene Gruppen aufgeteilt. Die eine Gruppe hat sich mit der Vorverarbeitung der Rohdaten beschäftigt, im Wesentlichen also aus den Rohdaten den metrische Raum $\left(Y, d_y\right)$ für die Eingabe des Algorithmus konstruiert. Die zweite Gruppe hat sich mit der Implementierung des Algorithmus, genauer der Rekonstruktion von $(\hat{X}, d_{\hat{x}})$, in Java auseinandergesetzt, während die dritte für die Visualisierung des Graphen $(\hat{X}, d_{\hat{x}})$ zuständig war. Damit wir stets alle über die Arbeit unserer Teammitglieder informiert waren haben wir unsere Ergebnisse auf der Hosting-Plattform GitHub\footnote{\url{github.com}} gespeichert und stets aktualisiert. Um anstehende Aufgaben für alle zugänglich zu dokumentieren haben wir zusätzlich das für Projektmanagement bestimmte Anwendung Trello \footnote{\url{trello.com}} genutzt, bei man ein virtuelles Notizbrett erstellen kann. Hier konnte jeder neue Aufgaben einstellen und sich dafür als Bearbeiter eintragen. Zusätzlich konnten wir dort den Stand der Arbeit an diesen Aufgaben dokumentieren, wodurch stets jeder darüber informiert war, woran die anderen gerade arbeiten. \newline
 \subsection*{Zielsetzung}
  Einschränkung auf GPS und Buchstaben\newline
+ 
 \section{Arbeit in den einzelnen Gruppen}
+
 \subsection{Preprocessing}
+
+Die Kernaufgabe dieser Gruppe bestand in der Erfassung, sowie der Vorverarbeitung der Eingabedaten in eine für den Algorithmus passende Form.
+
+Als Eingabe sind Schwarz-Weiß-Bilder, sowie GPS-Trace-Route-Dateien gedacht. Aus diesen müssen die Koordinaten der einzelnen Punkte extrahiert werden. Im Falle der GPS-Dateien wurde dazu ein Filter erstellt, welcher die angegebene Datei durchsucht und die Koordinaten extrahiert. Sollte ein Bild angegeben werden, wird jeder Bildpunkt geprüft, wobei von jedem schwarzen die Koordinaten erfasst werden.
+
+Da eventuell eine sehr große Punktmenge das Resultat sein kann, gibt es die Möglichkeit zur Reduzierung in Form der "`Epsilon-Net"' Funktion, welche durch Angabe eines Parameters (epsilon) möglichst nicht-repräsentative Punkte entfernt.
+
+Die Koordinaten werden in einem Set platziert und sind so zur weiteren Verarbeitung zugänglich.
+
+Anschließend ist es das Ziel, diese Koordinaten in einen metrischen Raum (\textit{metric space}) umzuformen. 
+
+Dazu wird ein Graph berechnet, welcher die Kanten und Ecken des "`alpha complex"' enthält. So werden in diesem Graphen Kanten vermieden, deren Endpunkte sich zu weit, bzw. zu nah aneinander befinden.
+
+Zusätzlich werden zwei Listen angelegt, welche zum einen die Adjazenzlisten der Knoten, sowie auch die Distanzen aller Punkte enthalten.
+
+Die Berechnung der Distanzen erfolgt mithilfe des Floyd-Warshall-Algorithmus zur Bestimmung des "`shortest path"'.
+
+Nun liegen alle benötigten Daten für den eigentlichen Algorithmus vor und werden in Form eines "`MetricSpace"'-Objektes übergeben.
+
 \subsection{Reconstruction}
 \subsection{Visualisierung}
 
