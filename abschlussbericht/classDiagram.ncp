@@ -11,7 +11,7 @@
         <Size width="444" height="231" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private Map&lt;Point2D, Set&lt;Edge&gt;&gt; adjacencyLists</Member>
-        <Member type="Field">private Map&lt;Point2D, Set&lt;Edge&gt;&gt; distanceMap</Member>
+        <Member type="Field">private Map&lt;Point2D, Map&lt;Point2D, Double&gt;&gt; distanceMap</Member>
         <Member type="Field">private double alpha</Member>
         <Member type="Method">public void setVertices(Set&lt;Point2D&gt; points)</Member>
         <Member type="Method">public double distance(Point2D a, Point2D b)</Member>
@@ -246,8 +246,6 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -266,8 +264,6 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
