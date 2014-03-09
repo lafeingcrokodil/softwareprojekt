@@ -44,6 +44,12 @@ Als Grundlage für unsere Arbeit diente uns ein Paper \cite{chenEa2012}, welches
 \begin{enumerate}
 \item \textbf{Kanten- und Knotenpunkte bestimmen}\newline
 Zunächst wird festgestellt, welche der in $\left(Y, d_y\right)$ enthaltenen Punkte in $(\hat{X}, d_{\hat{x}})$ zu einer Kante und welche zu einem Knoten gehören werden. Dafür wird um alle im Eingabegraphen enthaltenen Punkte ein Kreisring gelegt, wobei der innere Kreis des Kreisrings den Radius $r$ und der äu"sere den Radius ${5\over 3}r$ hat. Für die Punktmenge in diesem Kreisring wird anschlie"send der Rips-Vietoris-Graph mit dem Parameter ${4 \over 3}r$ erstellt. Das bedeutet, dass alle Punkte, die nicht mehr als ${4 \over 3}r$ voneinander entfernt sind, zu einer Zusammenhangskomponente gefasst werden. Daraufhin wird der Grad des jeweiligen Knoten bestimmt, indem die Zusammenhangskomponenten des Rips-Vietoris-Graphen gezählt werden. Enthält der Kreisring um einen Knoten zwei Zusammenhangskomponenten, hat er Grad zwei und es handelt sich um einen Punkt, der im rekonstruierten Graphen $(\hat{X}, d_{\hat{x}})$ zu einer Kante gehören wird. Daher erhält er das Label \textit{edge point}. Ist der Grad ungleich zwei, wird der Punkt zu einem Knoten gehören und wird daher als \textit{preliminary branch point} gekennzeichnet.
+
+\begin{figure}[h]
+\centering
+\includegraphics{branch.png}
+\end{figure}
+
 Diese Markierung erhalten diese Punkte lediglich vorläufig (\textit{preliminary}), da im Anschluss alle Punkte innerhalb eines Abstands von $2r$ von einem \textit{preliminary branch point} als \textit{branch point} gekennzeichnet werden. Hierbei werden auch die \textit{preliminary branch points} zu \textit{branch points}, womit sich die Punkte in $\left(Y, d_y\right)$ nun in zwei Teilmengen $\mathbb{E}$ und $\mathbb{V}$ aufteilen lassen. In $\mathbb{E}$ sind dabei die \textit{edge points} enthalten und in $\mathbb{V}$ die \textit{branch points}. Der Vorgang wird mit Pseudocode in Algorithm \ref{algo1} veranschaulicht. \newline
 \begin{algorithm}
 \caption{Kanten- und Knotenpunkte bestimmen}\label{algo1}
@@ -116,7 +122,7 @@ Nun liegen alle benötigten Daten für den eigentlichen Algorithmus vor und werd
 \includegraphics[scale=0.5]{main.png}
 \end{figure}
 
-Die Aufgabe der Rekonstruktion ist es, mithilfe des Algorithmus und der aus der Vorverarbeitung gelieferten Daten den gesuchten Graphen aus der Punktmenge zu rekonstruieren. Dazu haben wir den Algorithmus selbst in der Klasse Rekonstruktion implementiert. Der algorithmus benötigte jedoch ebenfalls die Rieps-Vietoris graphen über bestimmte Punktmengen, dieser wurde in der Klasse Rieps Vietoris Implementiert. Da die Daten der Vorverarbeitung nur die Punkte sowie eine Distanzfunktion  über diese Punkte gemäß der Schnittstelle Metric Space umfasste war es notwendig Diesen MetricSpace zu Erweitern was durch die Klasse MetricSpaceImplemented geschiet. Dadurch das die Rekonstruktionsgruppe aus 3 Mitgliedern bestand hat jeder die Programmierung einer der Klassen übernommen. Die Aufteilung war wie folgt:
+Die Aufgabe der Rekonstruktion ist es, mithilfe des Algorithmus und der aus der Vorverarbeitung gelieferten Daten den gesuchten Graphen aus der Punktmenge zu rekonstruieren. Dazu haben wir den Algorithmus selbst in der Klasse Reconstruction implementiert. Der Algorithmus benötigte jedoch ebenfalls den Rips-Vietoris-Graphen über bestimmte Punktmengen; dieser wurde in der Klasse RipsVietoris implementiert. Da die Daten der Vorverarbeitung nur die Punkte sowie eine Distanzfunktion über diese Punkte gemäß der Schnittstelle MetricSpace umfasste, war es notwendig diesen MetricSpace zu erweitern, was durch die Klasse MetricSpaceImplemented geschieht. Dadurch, dass die Rekonstruktionsgruppe aus 3 Mitgliedern bestand, hat jeder die Programmierung einer der Klassen übernommen. Die Aufteilung war wie folgt:
 
 \begin{enumerate}
 \item MetricSpaceImplemented: Lea Helmers
@@ -124,7 +130,7 @@ Die Aufgabe der Rekonstruktion ist es, mithilfe des Algorithmus und der aus der 
 \item RipsVietoris: Mahmoud Kassem
 \end{enumerate}
 
-Da die Klassen eng Zusammenarbeiten fand meist ein reger austausch in den Gruppentreffen und via Email statt. Getestet wurden die Klassen später zunächst soweit möglich einzeln und dann als Modul. Dabei wurden unter anderem auch Testeingaben und eine vorläufige anzeige für Metrische räume Entwickelt. Als endergebnis dieses Moduls gibt es den fertig rekonstruierten Graphen, abrufabr durch reconstructMetricGraph() welcher dann durch die Visualisierung angezeigt werden kann.
+Da die Klassen eng zusammenarbeiten, fand meist ein reger Austausch in den Gruppentreffen und via E-Mail statt. Getestet wurden die Klassen später zunächst soweit möglich einzeln und dann als Modul. Dabei wurden unter anderem auch Testeingaben und eine vorläufige Anzeige für metrische Räume entwickelt. Als Endergebnis dieses Moduls gibt es den fertig rekonstruierten Graphen, abrufbar durch reconstructMetricGraph(), welcher dann durch die Visualisierung angezeigt werden kann.
 
 \subsection{Visualisierung}
 
@@ -144,9 +150,9 @@ Zur Benutzerfreundlichkeit gibt es in beiden Fenstern eine Statusanzeige. Falls 
 
 \section{Testen}
 
-Das Testen erwieß sich zu anfangs als schwierig denn benötigte Daten für ein Modul kamen meist aus einem anderen Modul und es war nicht auszuschließen das diese Daten bereits fehler enthielten. Desweiteren wurde zuanfangs das Ergebnis eines Moduls direkt an das nächste weitergeleitet ohne eine zwischenzeitliche Veranschaulichung so das die Daten auf fehler gesichtet werden mussten. Aus diesem Grund entwickelten wir in den einzelnen gruppen Hilfsprogramme zur visualisierung des entsprechenden zwischenergebnisses sowie einige sets von festen test eingabedaten. Es war jedoch etwas zweischneidig, da zu anfangs diese visualisierungsprogramme ebenfalls Fehler enthielten so dass zum Beispiel bei der Anzeige des Ergebnisses der Graph an verschiedenen Achsen gespiegelt wurde. Nach beheben dieser schwierigkeiten war es möglich die meisten fiunktionen erstmals rudimentär zu testen bis dann schließlich einer aus der Gruppe das komplette Modul im zusammenspiel nochmals getestet hat.
+Das Testen erwieß sich anfangs als schwierig, denn benötigte Daten für ein Modul kamen meist aus einem anderen Modul und es war nicht auszuschließen, dass diese Daten bereits Fehler enthielten. Desweiteren wurde anfangs das Ergebnis eines Moduls direkt an das nächste weitergeleitet ohne eine zwischenzeitliche Veranschaulichung, so dass die Daten auf Fehler gesichtet werden mussten. Aus diesem Grund entwickelten wir in den einzelnen Gruppen Hilfsprogramme zur Visualisierung des entsprechenden Zwischenergebnisses sowie einige Sets von festen Test-Eingabedaten. Es war jedoch etwas zweischneidig, da anfangs diese Visualisierungsprogramme ebenfalls Fehler enthielten, so dass zum Beispiel bei der Anzeige des Ergebnisses der Graph an verschiedenen Achsen gespiegelt wurde. Nach beheben dieser Schwierigkeiten war es möglich die meisten Funktionen erstmals rudimentär zu testen bis dann schließlich einer aus der Gruppe das komplette Modul im Zusammenspiel nochmals getestet hat.
 
-Nach dem dies geschehen war führten wir die Module zusammen zu einem Gesammtprogramm, dabei sind unter anderem die Teilvisualisierungen mit in die endvisualisierung eingeflossen. Nun wurde nochmals das Komplette Programm als solchens getestet, wobei hier kaum noch schwierigkeiten auftraten da die meisten fehler durch die vorhergehenden Tests beseitigt wurden.
+Nachdem dies geschehen war, führten wir die Module zusammen zu einem Gesammtprogramm. Dabei sind unter anderem die Teilvisualisierungen mit in die Endvisualisierung eingeflossen. Nun wurde nochmals das komplette Programm als solchens getestet, wobei hier kaum noch Schwierigkeiten auftraten, da die meisten Fehler durch die vorhergehenden Tests beseitigt wurden.
 
 \section{Schwierigkeiten und Verbesserungsvorschläge}
 
