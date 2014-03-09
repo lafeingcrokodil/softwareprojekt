@@ -116,6 +116,16 @@ Nun liegen alle benötigten Daten für den eigentlichen Algorithmus vor und werd
 \includegraphics[scale=0.5]{main.png}
 \end{figure}
 
+Die Aufgabe der Rekonstruktion ist es, mithilfe des Algorithmus und der aus der Vorverarbeitung gelieferten Daten den gesuchten Graphen aus der Punktmenge zu rekonstruieren. Dazu haben wir den Algorithmus selbst in der Klasse Rekonstruktion implementiert. Der algorithmus benötigte jedoch ebenfalls die Rieps-Vietoris graphen über bestimmte Punktmengen, dieser wurde in der Klasse Rieps Vietoris Implementiert. Da die Daten der Vorverarbeitung nur die Punkte sowie eine Distanzfunktion  über diese Punkte gemäß der Schnittstelle Metric Space umfasste war es notwendig Diesen MetricSpace zu Erweitern was durch die Klasse MetricSpaceImplemented geschiet. Dadurch das die Rekonstruktionsgruppe aus 3 Mitgliedern bestand hat jeder die Programmierung einer der Klassen übernommen. Die Aufteilung war wie folgt:
+
+\begin{enumerate}
+\item MetricSpaceImplemented: Lea Helmers
+\item Reconstruction: Moritz Walter
+\item RipsVietoris: Mahmoud Kassem
+\end{enumerate}
+
+Da die Klassen eng Zusammenarbeiten fand meist ein reger austausch in den Gruppentreffen und via Email statt. Getestet wurden die Klassen später zunächst soweit möglich einzeln und dann als Modul. Dabei wurden unter anderem auch Testeingaben und eine vorläufige anzeige für Metrische räume Entwickelt. Als endergebnis dieses Moduls gibt es den fertig rekonstruierten Graphen, abrufabr durch reconstructMetricGraph() welcher dann durch die Visualisierung angezeigt werden kann.
+
 \subsection{Visualisierung}
 
 Die Visualisierung dient drei Zwecke:
