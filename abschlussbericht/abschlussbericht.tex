@@ -24,14 +24,23 @@
 \DeclareFieldFormat{postnote}{#1}
 \bibliography{abschlussbericht}
 \author{Terese Haimberger, Lea Helmers, Mahmoud Kassem, Daniel Theus, Moritz Walter}
-\title{Softwareprojekt: Rekonstruktion metrischer Graphen}
+\title{Abschlussbericht zum Softwareprojekt über Anwendungen effizienter Algorithmen -- WS 2013/14}
 \date{}
 \usepackage[left=3cm,right=4cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{hyperref}
 \setlength{\parindent}{0pt}
 
 \begin{document}
+
+\thispagestyle{empty}
 \maketitle
+\begin{center}
+\begin{Huge}
+Rekonstruktion metrischer Graphen
+\end{Huge}
+\end{center}
+\newpage
+\thispagestyle{empty}
 \tableofcontents
 \newpage
 \onehalfspacing
@@ -102,9 +111,7 @@ Da eventuell eine sehr große Punktmenge das Resultat sein kann, gibt es die Mö
 
 Die Punkte werden in einem Set platziert und sind so zur weiteren Verarbeitung zugänglich.
 
-Anschließend ist es das Ziel, diese Punkte in einen metrischen Raum (\textit{metric space}) umzuformen, d.\,h. die Punktmenge so zu strukturieren, dass wir möglichst schnell und einfach die paarweisen Abstände zwischen den Punkten berechnen können.
-
-Dazu wird zuerst die Delaunay-Triangulierung der Punktmenge berechnet (mithilfe der Delaunay\allowbreak TriangulationBuilder-Klasse der JTS Topology Suite). Anhand dieser Triangulierung wird ein Nachbarschaftsgraph erstellt. Der Graph besteht aus allen Knoten der Triangulierung und allen Kanten, deren Radius einen bestimmten Wert (\emph{alpha}) nicht überschreitet. (Der einzige Unterschied zum Alpha-Komplex ist, dass der Nachbarschaftsgraph keine Dreiecke enthält.) Als Datenstruktur werden dabei Adjazenzlisten verwendet.
+Anschließend ist es das Ziel, diese Punkte in einen metrischen Raum (\textit{metric space}) umzuformen, d.\,h. die Punktmenge so zu strukturieren, dass wir möglichst schnell und einfach die paarweisen Abstände zwischen den Punkten berechnen können. Dazu wird zuerst die Delaunay-Triangulierung der Punktmenge berechnet (mithilfe der Delaunay\allowbreak TriangulationBuilder-Klasse der JTS Topology Suite). Anhand dieser Triangulierung wird ein Nachbarschaftsgraph erstellt. Der Graph besteht aus allen Knoten der Triangulierung und allen Kanten, deren Radius einen bestimmten Wert (\emph{alpha}) nicht überschreitet. (Der einzige Unterschied zum Alpha-Komplex ist, dass der Nachbarschaftsgraph keine Dreiecke enthält.) Als Datenstruktur werden dabei Adjazenzlisten verwendet.
 
 Die Berechnung der Abstände erfolgt dann mithilfe des Floyd-Warshall-Algorithmus zur Bestimmung des kürzesten Pfades. Da diese Berechnung lange dauert, berechnen wir alle Abstände einmal und speichern sie in einer zweidimensionalen Tabelle (realisiert durch verschachtelte HashMap-Objekte). Bei der Rekonstruktion des Graphen können wir dann einfach auf die schon berechneten Abstände zugreifen.
 
@@ -113,6 +120,7 @@ Nun liegen alle benötigten Daten für den eigentlichen Algorithmus vor und werd
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.5]{preprocessing.png}
+\caption{Klassendiagramm der Vorverarbeitung}
 \end{figure}
 
 \subsection{Rekonstruktion}
@@ -120,9 +128,10 @@ Nun liegen alle benötigten Daten für den eigentlichen Algorithmus vor und werd
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.5]{main.png}
+\caption{Klassendiagramm der Rekonstruktion}
 \end{figure}
 
-Die Aufgabe der Rekonstruktion ist es, mithilfe des Algorithmus und der aus der Vorverarbeitung gelieferten Daten den gesuchten Graphen aus der Punktmenge zu rekonstruieren. Dazu haben wir den Algorithmus selbst in der Klasse Reconstruction implementiert. Der Algorithmus benötigte jedoch ebenfalls den Rips-Vietoris-Graphen über bestimmte Punktmengen; dieser wurde in der Klasse RipsVietoris implementiert. Da die Daten der Vorverarbeitung nur die Punkte sowie eine Distanzfunktion über diese Punkte gemäß der Schnittstelle MetricSpace umfasste, war es notwendig diesen MetricSpace zu erweitern, was durch die Klasse MetricSpaceImplemented geschieht. Dadurch, dass die Rekonstruktionsgruppe aus 3 Mitgliedern bestand, hat jeder die Programmierung einer der Klassen übernommen. Die Aufteilung war wie folgt:
+Die Aufgabe der Rekonstruktion ist es, mithilfe des Algorithmus und der aus der Vorverarbeitung gelieferten Daten den gesuchten Graphen aus der Punktmenge zu rekonstruieren. Dazu haben wir den Algorithmus selbst in der Klasse Reconstruction implementiert. Der Algorithmus benötigte jedoch ebenfalls den Rips-Vietoris-Graphen über bestimmte Punktmengen. Dieser wurde in der Klasse RipsVietoris implementiert. Da die Daten der Vorverarbeitung nur die Punkte sowie eine Distanzfunktion über diese Punkte gemäß der Schnittstelle MetricSpace umfasste, war es notwendig diesen MetricSpace zu erweitern, was durch die Klasse MetricSpaceImplemented geschieht. Dadurch dass die Rekonstruktionsgruppe aus 3 Mitgliedern bestand, hat jeder die Programmierung einer der Klassen übernommen. Die Aufteilung war wie folgt:
 
 \begin{enumerate}
 \item MetricSpaceImplemented: Lea Helmers
@@ -130,11 +139,11 @@ Die Aufgabe der Rekonstruktion ist es, mithilfe des Algorithmus und der aus der 
 \item RipsVietoris: Mahmoud Kassem
 \end{enumerate}
 
-Da die Klassen eng zusammenarbeiten, fand meist ein reger Austausch in den Gruppentreffen und via E-Mail statt. Getestet wurden die Klassen später zunächst soweit möglich einzeln und dann als Modul. Dabei wurden unter anderem auch Testeingaben und eine vorläufige Anzeige für metrische Räume entwickelt. Als Endergebnis dieses Moduls gibt es den fertig rekonstruierten Graphen, abrufbar durch reconstructMetricGraph(), welcher dann durch die Visualisierung angezeigt werden kann.
+Da die drei Klassen eng zusammenarbeiten, fand meist ein reger Austausch über ihren Aufbau in den Gruppentreffen und via E-Mail statt. Getestet wurden die Klassen später zunächst soweit möglich einzeln und dann als Modul. Dabei wurden unter anderem auch Testeingaben und eine vorläufige Anzeige für metrische Räume entwickelt. Als Endergebnis dieses Moduls gibt es den fertig rekonstruierten Graphen, abrufbar durch reconstructMetricGraph(), welcher dann durch die Visualisierung angezeigt werden kann.
 
 \subsection{Visualisierung}
 
-Die Visualisierung dient drei Zwecke:
+Die Visualisierung dient drei Zwecken:
 
 \begin{enumerate}
 \item \textbf{Testen:} Sie erlaubt es uns auf einen Blick zu sehen, ob unsere Implementierung das liefert, was wir erwarten.
@@ -142,39 +151,44 @@ Die Visualisierung dient drei Zwecke:
 \item \textbf{Vergleich der Ein- und Ausgabe:} Am Ende sieht der Benutzer eine graphische Darstellung des metrischen Raumes, zusammen mit dem rekonstruierten metrischen Graphen.
 \end{enumerate}
 
-Die graphische Benutzeroberfläche zur Visualisierung haben wir in zwei Fenster aufgeteilt: das Vorverarbeitungsfenster dient zum Testen der Vorverarbeitung und zur Auswahl der Parameter \emph{epsilon} und \emph{alpha} und das Rekonstruktionsfenster dient zum Testen unserer Implementierung des Algorithmus, zur Auswahl des Parameters \emph{radius} und zum Vergleich der Ein- und Ausgabe.
+Die graphische Benutzeroberfläche zur Visualisierung haben wir in zwei Fenster aufgeteilt: das Vorverarbeitungsfenster dient zum Testen der Vorverarbeitung und zur Auswahl der Parameter \emph{epsilon} und \emph{alpha}, während das Rekonstruktionsfenster zum Testen unserer Implementierung des Algorithmus, zur Auswahl des Parameters \emph{radius} und zum Vergleich der Ein- und Ausgabe dient.
 
-Damit der Benutzer bei der Parameterauswahl nicht nach jeder Änderung der Parameter lange warten muss, bis er die Auswirkung sieht, haben wir Vorschau-Schaltflächen eingebaut. Im Vorverarbeitungsfenster wird beim Vorschau ein Nachbarschaftsgraph ohne Abstände berechnet. Wichtig bei der Auswahl von \emph{epsilon} und \emph{alpha} sind nämlich nicht die Abstände zwischen den Knoten, sondern die Struktur des Graphen. Im Rekonstruktionsfenster werden beim Vorschau nur die Kanten- und Knotenpunkte bestimmt (die Kantenpunkte werden blau und die Knotenpunkte rot markiert).
+Damit der Benutzer bei der Parameterauswahl nicht nach jeder Änderung der Parameter lange warten muss, bis er die Auswirkungen sieht, haben wir Vorschau-Schaltflächen eingebaut. Im Vorverarbeitungsfenster wird bei der Vorschau ein Nachbarschaftsgraph ohne Abstände berechnet. Wichtig bei der Auswahl von \emph{epsilon} und \emph{alpha} sind nämlich nicht die Abstände zwischen den Knoten, sondern die Struktur des Graphen. Im Rekonstruktionsfenster werden bei der Vorschau nur die Kanten- und Knotenpunkte bestimmt (die Kantenpunkte werden blau und die Knotenpunkte rot markiert).
 
 Zur Benutzerfreundlichkeit gibt es in beiden Fenstern eine Statusanzeige. Falls eine Berechnung lange dauert, kann der Benutzer dort den Fortschritt verfolgen. An dieser Stelle werden auch die Kantenlängen bzw. die Koordinaten angezeigt, wenn der Benutzer mit der Maus über Kanten oder Knoten des rekonstruierten metrischen Graphen fährt.
 
 \section{Testen}
 
-Das Testen erwieß sich anfangs als schwierig, denn benötigte Daten für ein Modul kamen meist aus einem anderen Modul und es war nicht auszuschließen, dass diese Daten bereits Fehler enthielten. Desweiteren wurde anfangs das Ergebnis eines Moduls direkt an das nächste weitergeleitet ohne eine zwischenzeitliche Veranschaulichung, so dass die Daten auf Fehler gesichtet werden mussten. Aus diesem Grund entwickelten wir in den einzelnen Gruppen Hilfsprogramme zur Visualisierung des entsprechenden Zwischenergebnisses sowie einige Sets von festen Test-Eingabedaten. Es war jedoch etwas zweischneidig, da anfangs diese Visualisierungsprogramme ebenfalls Fehler enthielten, so dass zum Beispiel bei der Anzeige des Ergebnisses der Graph an verschiedenen Achsen gespiegelt wurde. Nach beheben dieser Schwierigkeiten war es möglich die meisten Funktionen erstmals rudimentär zu testen bis dann schließlich einer aus der Gruppe das komplette Modul im Zusammenspiel nochmals getestet hat.
+Das Testen erwies sich anfangs als schwierig, denn benötigte Daten für ein Modul kamen meist aus einem anderen Modul und es war nicht auszuschließen, dass diese Daten bereits Fehler enthielten. Des Weiteren wurde anfangs das Ergebnis eines Moduls direkt an das nächste weitergeleitet ohne eine zwischenzeitliche Veranschaulichung, so dass die Daten auf Fehler gesichtet werden mussten. Aus diesem Grund entwickelten wir in den einzelnen Gruppen Hilfsprogramme zur Visualisierung des entsprechenden Zwischenergebnisses sowie einige Sets von festen Test-Eingabedaten. Es war jedoch etwas zweischneidig, da diese Visualisierungsprogramme zu Anfang ebenfalls Fehler enthielten, so dass zum Beispiel bei der Anzeige des Ergebnisses der Graph an verschiedenen Achsen gespiegelt wurde. Nach dem Beheben dieser Schwierigkeiten war es möglich, die meisten Funktionen erstmals rudimentär zu testen, bis dann schließlich ein Gruppenmitglied das komplette Modul im Zusammenspiel nochmals getestet hat.
 
-Nachdem dies geschehen war, führten wir die Module zusammen zu einem Gesammtprogramm. Dabei sind unter anderem die Teilvisualisierungen mit in die Endvisualisierung eingeflossen. Nun wurde nochmals das komplette Programm als solchens getestet, wobei hier kaum noch Schwierigkeiten auftraten, da die meisten Fehler durch die vorhergehenden Tests beseitigt wurden.
+Nachdem dies geschehen war, führten wir die Module zu einem Gesamtprogramm zusammen. Dabei sind unter anderem die Teilvisualisierungen mit in die Endvisualisierung eingeflossen. Nun wurde nochmals das komplette Programm als solches getestet, wobei hier kaum noch Schwierigkeiten auftraten, da die meisten Fehler durch die vorhergehenden Tests beseitigt wurden.
 
 \section{Schwierigkeiten und Verbesserungsvorschläge}
 
+\subsection*{Umsetzung des Algorithmus}
 Eine grundsätzliche Schwierigkeit war das Testen fertiger Module.
-Aufgrund der Datenfluss-ähnlichen Struktur des Gesamtprogramms kann
+Aufgrund der Datenfluss-artigen Struktur des Gesamtprogramms kann
 ein kleiner Fehler in der Vorverarbeitung massiven Einfluss
 auf das Endergebnis nehmen. Da dieses Ergebnis graphischer Natur ist,
 war wirkliches Testen aber erst nach Erstellung einer graphischen Ausgabe
 (Prototyp) möglich. Im Falle des Epsilon-Netzes ließ sich so beispielsweise 
 zuverlässiges Aussortieren von nicht benötigten Punkten erst spät testen,
-da anhand der blanken Koordinaten die Auswirkungen sich nicht gut genug
-erkennen ließen und die Menge als ganzes nur schwer zu erfassen war.
+da sich anhand der blanken Koordinaten die Auswirkungen nicht gut genug
+erkennen ließen und die Menge als Ganzes nur schwer zu erfassen war.
 
-Ideen für weitere Features bzw. Änderungen an Algorithmen gab es einige, 
-allerdings machte der Zeitmangel die Umsetzung zu Nichte. So waren
+Ideen für weitere Features bzw. Änderungen an Algorithmen gab es einige. So waren
 als Verbesserungen z.\,B. eine Einbeziehung des Zeitstempels von GPS Daten
 zur Verbesserung des Nachbarschaftsgraphen, die Abstandsberechnung mithilfe des
 Algorithmus von Dijkstra statt Floyd-Warshall um die Laufzeit zu senken,
 eine automatisierte Möglichkeit zur optimalen Bestimmung der Parameter oder
-auch die Berechnung von Orthodromen um den Abstand in km anzugeben, angedacht.
+auch die Berechnung von Orthodromen um den Abstand in km anzugeben, angedacht. Allerdings machte der Zeitmangel die Umsetzung zunichte.
+
+\subsection*{Organisation}
+Die zu erledigenden Aufgaben wurden von allen Gruppenmitgliedern stets sehr ernst genommen und möglichst schnell erledigt. Diese Zuverlässigkeit war grundlegend dafür, dass wir den Algorithmus letztendlich erfolgreich implementieren konnten. Bedauerlicherweise ist es bisweilen vorgekommen, dass sich einige Aufgaben im Nachhinein als wesentlich zeitaufwändiger herausgestellt haben, als zuvor angenommen, sodass einige Gruppenmitglieder teilweise ein höheres Arbeitspensum erledigen mussten als andere. Dies hätte eventuell durch eine bessere Planung bei der Aufteilung der Aufgaben in den Untergruppen oder durch vermehrte Teamarbeit, beispielsweise das Implementieren von Klassen in Zweiergruppen, vermieden werden können.\newline
+Eine weitere gro"se Herausforderung für unsere Gruppe war, dass das Mitglied, das eigentlich für die Visualisierung und die Implementierung der graphischen Benutzeroberfläche zuständig war, letztendlich doch nicht an dem Softwareprojekt teilnehmen konnte, was wir leider erst sehr spät erfuhren. So mussten die Vorverarbeitungs- und die Rekonstruktionsgruppe zusätzlich und unter erhöhtem Zeitdruck auch noch diese Aufgabe übernehmen. Nichtsdestotrotz ist dies gelungen und es war ein erfreuliches Erlebnis, die funktionstüchtige Software auszuprobieren.
 
 \section{Zusammenfassung}
+Die Erstellung der Software war, trotz der im vorangehenden Abschnitt genannten Schwierigkeiten, sehr interessant und im Rahmen der Lehrveranstaltung gut umsetzbar. Alle Teilnehmer haben sowohl einiges über das objektorientierte Programmieren selbst und die Programmiersprache Java, als auch über die Softwareverwaltung und die Arbeit in einer grö"seren Gruppe viel Wertvolles gelernt. Die Aufgabe war anspruchsvoll jedoch nicht überfordernd. Während einige Gruppenmitglieder schon an Softwareprojekten teilgenommen hatten, war diese Erfahrung für andere vollkommen neu. Letztere konnten von den bereits gemachten Erfahrungen der anderen Gruppenmitglieder profitieren, wodurch die Zusammenarbeit für alle Teilnehmer sehr fruchtbar war. Dass noch Verbesserungsmöglichkeiten, sowohl was die Software und deren Effizienz, als auch was die Arbeit in der Gruppe betrifft, bestehen, ist dabei nicht als Misserfolg zu sehen sondern als Erfahrung, die für das nächste Softwareprojekt sicherlich nützlich ist. 
 \printbibliography
 
 \end{document}
