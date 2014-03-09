@@ -118,6 +118,20 @@ Nun liegen alle benötigten Daten für den eigentlichen Algorithmus vor und werd
 
 \subsection{Visualisierung}
 
+Die Visualisierung dient drei Zwecke:
+
+\begin{enumerate}
+\item \textbf{Testen:} Sie erlaubt es uns auf einen Blick zu sehen, ob unsere Implementierung das liefert, was wir erwarten.
+\item \textbf{Parameterauswahl:} Sie ermöglicht es dem Benutzer, unterschiedliche Parameter auszuprobieren und zu sehen, wie sich dadurch die Zwischen- und Endergebnisse ändern.
+\item \textbf{Vergleich der Ein- und Ausgabe:} Am Ende sieht der Benutzer eine graphische Darstellung des metrischen Raumes, zusammen mit dem rekonstruierten metrischen Graphen.
+\end{enumerate}
+
+Die graphische Oberfläche zur Visualisierung haben wir in zwei Fenster aufgeteilt: das Vorverarbeitungsfenster dient zum Testen der Vorverarbeitung und zur Auswahl der Parameter \emph{epsilon} und \emph{alpha} und das Rekonstruktionsfenster dient zum Testen unserer Implementierung des Algorithmus, zur Auswahl des Parameters \emph{radius} und zum Vergleich der Ein- und Ausgabe.
+
+Damit der Benutzer bei der Parameterauswahl nicht nach jeder Änderung der Parameter lange warten muss, bis er die Auswirkung sieht, haben wir Vorschau-Schaltflächen eingebaut. Im Vorverarbeitungsfenster wird beim Vorschau ein Nachbarschaftsgraph ohne Abstände berechnet. Wichtig bei der Auswahl von \emph{epsilon} und \emph{alpha} sind nämlich nicht die Abstände zwischen den Knoten, sondern die Struktur des Graphen. Im Rekonstruktionsfenster werden beim Vorschau nur die Kanten- und Knotenpunkte bestimmt (die Kantenpunkte werden blau und die Knotenpunkte rot markiert).
+
+Zur Benutzerfreundlichkeit gibt es in beiden Fenstern eine Statusanzeige. Falls eine Berechnung lange dauert, kann der Benutzer dort den Fortschritt verfolgen.
+
 \section{Testen}
 
 \section{Schwierigkeiten und Verbesserungsvorschläge}
@@ -127,7 +141,7 @@ Aufgrund der Datenfluss-ähnlichen Struktur des Gesamtprogramms kann
 ein kleiner Fehler in der Vorverarbeitung massiven Einfluss
 auf das Endergebnis nehmen. Da dieses Ergebnis graphischer Natur ist,
 war wirkliches Testen aber erst nach Erstellung einer graphischen Ausgabe
-(Prototyp) möglich. Im Falle des Epsilon-Netz ließ sich so beispielsweise 
+(Prototyp) möglich. Im Falle des Epsilon-Netzes ließ sich so beispielsweise 
 zuverlässiges Aussortieren von nicht benötigten Punkten erst spät testen,
 da anhand der blanken Koordinaten die Auswirkungen sich nicht gut genug
 erkennen ließen und die Menge als ganzes nur schwer zu erfassen war.
