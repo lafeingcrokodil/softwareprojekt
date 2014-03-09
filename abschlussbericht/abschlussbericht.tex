@@ -92,13 +92,13 @@ Die Kernaufgabe dieser Gruppe bestand in der Erfassung, sowie der Vorverarbeitun
 
 Als Eingabe sind Schwarz-Weiß-Bilder, sowie GPS-Trace-Route-Dateien gedacht. Aus diesen müssen die Koordinaten der einzelnen Punkte extrahiert werden. Im Falle der GPS-Dateien wurde dazu ein Filter erstellt, welcher die angegebene Datei durchsucht und die Koordinaten (Längen- und Breitengrade) extrahiert. Sollte ein Bild angegeben werden, wird jeder Bildpunkt geprüft, wobei von jedem schwarzen die Pixelkoordinaten erfasst werden.
 
-Da eventuell eine sehr große Punktmenge das Resultat sein kann, gibt es die Möglichkeit zur Reduzierung in Form der EpsilonNet-Klasse, welche durch Angabe eines Parameters (\emph{epsilon}) redundante Punkte entfernt. Dabei wird ein Algorithmus verwendet, der unter Verwendung eines Gitters ein metrisches Epsilon-Netz in linearer Zeit berechnet.\footnote{Sariel Har-Peled und Benjamin Raichel. Net and Prune: A Linear Time Algorithm for Euclidean Distance Problems. \url{http://web.engr.illinois.edu/~raichel2/aggregate.pdf}, 8. November 2012. (Beweis zum Lemma 2.2)}
+Da eventuell eine sehr große Punktmenge das Resultat sein kann, gibt es die Möglichkeit zur Reduzierung in Form der EpsilonNet-Klasse, welche durch Angabe eines Parameters (\emph{epsilon}) redundante Punkte entfernt. Dabei wird ein Algorithmus verwendet, der unter Verwendung eines Gitters ein metrisches Epsilon-Netz in linearer Zeit berechnet.\footnote{Sariel Har-Peled und Benjamin Raichel. Net and Prune: A Linear Time Algorithm for Euclidean Distance Problems. \url{http://web.engr.illinois.edu/~raichel2/aggregate.pdf}, 8. November 2012. (Der Algorithmus wird im Beweis zum Lemma 2.2 beschrieben.)}
 
 Die Punkte werden in einem Set platziert und sind so zur weiteren Verarbeitung zugänglich.
 
 Anschließend ist es das Ziel, diese Punkte in einen metrischen Raum (\textit{metric space}) umzuformen, d.\,h. die Punktmenge so zu strukturieren, dass wir möglichst schnell und einfach die paarweisen Abstände zwischen den Punkten berechnen können.
 
-Dazu wird zuerst die Delaunay-Triangulierung der Punktmenge berechnet (mithilfe der DelaunayTriangulationBuilder-Klasse der JTS Topology Suite). Anhand dieser Triangulierung wird ein Nachbarschaftsgraph erstellt. Der Graph besteht aus allen Knoten der Triangulierung und allen Kanten, deren Radius einen bestimmten Wert (\emph{alpha}) nicht überschreitet. (Der einzige Unterschied zum Alpha-Komplex ist, dass der Nachbarschaftsgraph keine Dreiecke enthält.) Als Datenstruktur werden dabei Adjazenzlisten verwendet.
+Dazu wird zuerst die Delaunay-Triangulierung der Punktmenge berechnet (mithilfe der Delaunay\allowbreak TriangulationBuilder-Klasse der JTS Topology Suite). Anhand dieser Triangulierung wird ein Nachbarschaftsgraph erstellt. Der Graph besteht aus allen Knoten der Triangulierung und allen Kanten, deren Radius einen bestimmten Wert (\emph{alpha}) nicht überschreitet. (Der einzige Unterschied zum Alpha-Komplex ist, dass der Nachbarschaftsgraph keine Dreiecke enthält.) Als Datenstruktur werden dabei Adjazenzlisten verwendet.
 
 Die Berechnung der Abstände erfolgt dann mithilfe des Floyd-Warshall-Algorithmus zur Bestimmung des kürzesten Pfades. Da diese Berechnung lange dauert, berechnen wir alle Abstände einmal und speichern sie in einer zweidimensionalen Tabelle (realisiert durch verschachtelte HashMap-Objekte). Bei der Rekonstruktion des Graphen können wir dann einfach auf die schon berechneten Abstände zugreifen.
 
@@ -126,11 +126,11 @@ Die Visualisierung dient drei Zwecke:
 \item \textbf{Vergleich der Ein- und Ausgabe:} Am Ende sieht der Benutzer eine graphische Darstellung des metrischen Raumes, zusammen mit dem rekonstruierten metrischen Graphen.
 \end{enumerate}
 
-Die graphische Oberfläche zur Visualisierung haben wir in zwei Fenster aufgeteilt: das Vorverarbeitungsfenster dient zum Testen der Vorverarbeitung und zur Auswahl der Parameter \emph{epsilon} und \emph{alpha} und das Rekonstruktionsfenster dient zum Testen unserer Implementierung des Algorithmus, zur Auswahl des Parameters \emph{radius} und zum Vergleich der Ein- und Ausgabe.
+Die graphische Benutzeroberfläche zur Visualisierung haben wir in zwei Fenster aufgeteilt: das Vorverarbeitungsfenster dient zum Testen der Vorverarbeitung und zur Auswahl der Parameter \emph{epsilon} und \emph{alpha} und das Rekonstruktionsfenster dient zum Testen unserer Implementierung des Algorithmus, zur Auswahl des Parameters \emph{radius} und zum Vergleich der Ein- und Ausgabe.
 
 Damit der Benutzer bei der Parameterauswahl nicht nach jeder Änderung der Parameter lange warten muss, bis er die Auswirkung sieht, haben wir Vorschau-Schaltflächen eingebaut. Im Vorverarbeitungsfenster wird beim Vorschau ein Nachbarschaftsgraph ohne Abstände berechnet. Wichtig bei der Auswahl von \emph{epsilon} und \emph{alpha} sind nämlich nicht die Abstände zwischen den Knoten, sondern die Struktur des Graphen. Im Rekonstruktionsfenster werden beim Vorschau nur die Kanten- und Knotenpunkte bestimmt (die Kantenpunkte werden blau und die Knotenpunkte rot markiert).
 
-Zur Benutzerfreundlichkeit gibt es in beiden Fenstern eine Statusanzeige. Falls eine Berechnung lange dauert, kann der Benutzer dort den Fortschritt verfolgen.
+Zur Benutzerfreundlichkeit gibt es in beiden Fenstern eine Statusanzeige. Falls eine Berechnung lange dauert, kann der Benutzer dort den Fortschritt verfolgen. An dieser Stelle werden auch die Kantenlängen bzw. die Koordinaten angezeigt, wenn der Benutzer mit der Maus über Kanten oder Knoten des rekonstruierten metrischen Graphen fährt.
 
 \section{Testen}
 
